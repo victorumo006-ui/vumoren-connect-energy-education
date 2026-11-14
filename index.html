@@ -137,10 +137,20 @@ const resources={
  safety:{name:'VUMOREN CONNECT - Basic Electrical Safety.txt',body:'BASIC ELECTRICAL SAFETY\n\n1. Never touch exposed wires or damaged electrical equipment.\n2. Keep electrical equipment away from water.\n3. Do not overload sockets or extension boards.\n4. Switch off power before any inspection; electrical work should be done by a qualified person.\n5. Keep children away from electrical installations.\n6. If you notice sparks, burning smells or unusual heat, keep away and contact a qualified electrician.\n\nThis is general awareness information, not a practical repair manual.'},
  teacher:{name:'VUMOREN CONNECT - Teacher Lesson Checklist.txt',body:'TEACHER LESSON CHECKLIST\n\nBefore the lesson:\n- Identify one or two clear learning objectives.\n- Prepare examples using locally available materials.\n- Check that learning materials can be used offline if needed.\n\nDuring the lesson:\n- Explain the topic in clear steps.\n- Invite learners to ask questions.\n- Use a short activity to check understanding.\n\nAfter the lesson:\n- Review learners’ responses.\n- Identify topics that need revision.\n- Prepare a short follow-up activity.\n\nThis is a general planning aid for educators.'}
 };
+  
 function downloadResource(key){
- const item=resources[key], blob=new Blob([item.body],{type:'text/plain;charset=utf-8'}), url=URL.createObjectURL(blob), a=document.createElement('a');
- a.href=url;a.download=item.name;a.click();URL.revokeObjectURL(url);
-}
+ const item=resources[key];
+ const blob=new Blob([item.body],{type:'text/plain;charset=utf-8'});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');
+ a.href=url;
+ a.download=item.name;
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),2000);
+   }
+  
 function demoSubmit(e){e.preventDefault();document.getElementById('formmessage').textContent='Demo only: your form has been checked in this browser, but no enquiry was sent or saved. A secure backend must be connected before launch.';}
 </script>
 </body>
