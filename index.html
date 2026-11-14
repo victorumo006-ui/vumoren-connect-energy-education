@@ -264,31 +264,34 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
   Practical energy information and accessible learning support.
   </footer>
 <script>
+
 function calculate() {
-  const inputs = document.querySelectorAll("#energy input");
-  const watts = Number(inputs[0]?.value);
-  const hours = Number(inputs[1]?.value);
-  const sun = Number(inputs[2]?.value);
+  const watts = Number(document.getElementById("watts").value);
+  const hours = Number(document.getElementById("hours").value);
+  const sun = Number(document.getElementById("sun").value);
 
-  const result = document.querySelector("#energy .result");
+  const dailyOutput = document.getElementById("daily");
+  const systemOutput = document.getElementById("system");
 
-  if (!watts || !hours || !sun || watts <= 0 || hours <= 0 || hours > 24 || sun <= 0) {
-    if (result) result.textContent = "Please enter valid values. Daily hours must not exceed 24.";
+  if (watts <= 0 || hours <= 0 || hours > 24 || sun <= 0) {
+    dailyOutput.textContent = "Please check your entries";
+    systemOutput.textContent =
+      "Enter appliance power above zero and daily usage between 0 and 24 hours.";
     return;
   }
 
-  const dailyEnergy = watts * hours / 1000;
-  const panelSize = dailyEnergy / (sun * 0.75);
-  const recommended = Math.ceil(panelSize / 50) * 50;
+  const daily = watts * hours / 1000;
+  const panel = daily / (sun * 0.75);
+  const recommended = Math.ceil(panel / 50) * 50;
 
-  if (result) {
-    result.innerHTML =
-      "<strong>Estimated daily energy:</strong> " + dailyEnergy.toFixed(2) + " kWh<br>" +
-      "<strong>Indicative solar panel capacity:</strong> " + recommended + " W<br>" +
-      "<small>This is an initial estimate, not a final system design. Battery capacity, inverter rating, surge loads and site conditions must also be assessed.</small>";
-  }
+  dailyOutput.textContent = daily.toFixed(2) + " kWh";
+
+  systemOutput.textContent =
+    "Indicative solar-panel capacity: about " +
+    recommended +
+    " W or more. A qualified professional must assess battery and inverter requirements.";
 }
-
+ 
 const resources = {
   study: {
     name: "Study Skills Guide",
