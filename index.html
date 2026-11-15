@@ -48,7 +48,7 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
  <nav aria-label="Main navigation">
   <a href="#energy">Solar tools</a><a href="#services">Services</a><a href="#efficiency">Save energy</a>
   <a href="#education">Learning</a><a href="#training">Training</a><a href="#request">Request support</a>
-<a href="#tracking">Track request</a><a href="#about">About</a>
+<a href="#tracking">Track request</a><a href="#about">About</a><a href="#admin">Admin</a>
  </nav>
 </header>
 
@@ -617,7 +617,252 @@ async function trackVumorenSubmission(event) {
   }
 }
 
-toggleProviderFields();
+let vumorenAdminAccessToken = null;
+
+const VUMOREN_ADMIN_TABLES = {
+  service_requests: {
+    target: "adminServiceRequests",
+    fields: [
+      ["Reference", "request_code"],
+      ["Customer", "customer_name"],
+      ["Phone", "phone"],
+      ["Email", "email"],
+      ["Service", "service_type"],
+      ["Location", "location"],
+      ["Description", "description"]
+    ],
+    statuses: ["pending", "in_progress", "completed", "cancelled"]
+  },
+  enquiries: {
+    target: "adminEnquiries",
+    fields: [
+      ["Reference", "request_code"],
+      ["Customer", "customer_name"],
+      ["Phone", "phone"],
+      ["Email", "email"],
+      ["Subject", "subject"],
+      ["Message", "message"]
+    ],
+    statuses: ["new", "in_progress", "resolved"]
+  },
+  provider_applications: {
+    target: "adminProviderApplications",
+    fields: [
+      ["Application", "application_code"],
+      ["Applicant", "applicant_name"],
+      ["Phone", "phone"],
+      ["Email", "email"],
+      ["Skills", "skills"],
+      ["Experience (years)", "years_experience"],
+      ["Service area", "service_area"],
+      ["Qualifications", "qualifications"],
+      ["Work summary", "work_summary"],
+      ["Admin notes", "admin_notes"]
+    ],
+    statuses: ["pending", "under_review", "approved", "rejected"]
+  }
+};
+
+async function vumorenAdminRequest(path, options = {}) {
+  const response = await fetch(VUMOREN_SUPABASE_URL + path, {
+    ...options,
+    headers: {
+      "apikey": VUMOREN_SUPABASE_KEY,
+      "Authorization": "Bearer " + vumorenAdminAccessToken,
+      ...(options.headers || {})
+    }
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(data.message || data.details || "Administrator request failed.");
+  }
+
+  return data;
+}
+
+async function loginVumorenAdmin(event) {
+  event.preventDefault();
+
+  const message = document.getElementById("adminLoginMessage");
+  const dashboard = document.getElementById("vumorenAdminDashboard");
+  const loginForm = document.getElementById("vumorenAdminLogin");
+
+  message.textContent = "Verifying administrator credentials...";
+  dashboard.hidden = true;
+  vumorenAdminAccessToken = null;
+
+  try {
+    const response = await fetch(
+      VUMOREN_SUPABASE_URL + "/auth/v1/token?grant_type=password",
+      {
+        method: "POST",
+        headers: {
+          "apikey": VUMOREN_SUPABASE_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: document.getElementById("adminEmail").value.trim(),
+          password: document.getElementById("adminPassword").value
+        })
+      }
+    );
+
+    const session = await response.json().catch(() => ({}));
+
+    if (!response.ok || !session.access_token) {
+      throw new Error(session.msg || session.message || "Login failed. Check your email and password.");
+    }
+
+    vumorenAdminAccessToken = session.access_token;
+
+    const isAdmin = await vumorenAdminRequest(
+      "/rest/v1/rpc/is_vumoren_admin",
+      { method: "POST" }
+    );
+
+    if (isAdmin !== true) {
+      vumorenAdminAccessToken = null;
+      throw new Error("Access denied. This account is not an authorised administrator.");
+    }
+
+    dashboard.hidden = false;
+    loginForm.reset();
+    message.textContent = "Administrator verified successfully.";
+
+    await loadVumorenAdminData();
+
+  } catch (error) {
+    vumorenAdminAccessToken = null;
+    dashboard.hidden = true;
+    message.textContent = error.message;
+  }
+}
+
+async function loadVumorenAdminData() {
+  if (!vumorenAdminAccessToken) return;
+
+  const message = document.getElementById("adminDashboardMessage");
+  message.textContent = "Loading records...";
+
+  const queries = {
+    service_requests:
+      "select=id,request_code,customer_name,phone,email,service_type,location,description,status,created_at&order=created_at.desc",
+    enquiries:
+      "select=id,request_code,customer_name,phone,email,subject,message,status,created_at&order=created_at.desc",
+    provider_applications:
+      "select=id,application_code,applicant_name,phone,email,skills,years_experience,service_area,qualifications,work_summary,admin_notes,status,created_at&order=created_at.desc"
+  };
+
+  try {
+    for (const table of Object.keys(VUMOREN_ADMIN_TABLES)) {
+      const records = await vumorenAdminRequest(
+        "/rest/v1/" + table + "?" + queries[table]
+      );
+
+      renderVumorenAdminRecords(table, records);
+    }
+
+    message.textContent = "Records loaded successfully.";
+  } catch (error) {
+    message.textContent = "Could not load records: " + error.message;
+  }
+}
+
+function renderVumorenAdminRecords(table, records) {
+  const config = VUMOREN_ADMIN_TABLES[table];
+  const container = document.getElementById(config.target);
+  container.replaceChildren();
+
+  if (!records || records.length === 0) {
+    container.textContent = "No records found.";
+    return;
+  }
+
+  records.forEach(record => {
+    const card = document.createElement("article");
+    card.className = "card";
+    card.style.margin = "12px 0";
+
+    config.fields.forEach(([label, field]) => {
+      if (record[field] === null || record[field] === undefined || record[field] === "") return;
+
+      const paragraph = document.createElement("p");
+      const strong = document.createElement("strong");
+      strong.textContent = label + ": ";
+      paragraph.append(strong, document.createTextNode(String(record[field])));
+      card.appendChild(paragraph);
+    });
+
+    const statusLabel = document.createElement("label");
+    statusLabel.textContent = "Update status";
+    card.appendChild(statusLabel);
+
+    const statusSelect = document.createElement("select");
+
+    config.statuses.forEach(status => {
+      const option = document.createElement("option");
+      option.value = status;
+      option.textContent = status.replaceAll("_", " ");
+      statusSelect.appendChild(option);
+    });
+
+    statusSelect.value = record.status;
+    card.appendChild(statusSelect);
+
+    const saveButton = document.createElement("button");
+    saveButton.type = "button";
+    saveButton.className = "btn";
+    saveButton.style.cssText = "background:#123b32;color:white";
+    saveButton.textContent = "Save status";
+
+    saveButton.addEventListener("click", async () => {
+      saveButton.disabled = true;
+      saveButton.textContent = "Saving...";
+
+      try {
+        await vumorenAdminRequest(
+          "/rest/v1/" + table + "?id=eq." + encodeURIComponent(record.id),
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              "Prefer": "return=minimal"
+            },
+            body: JSON.stringify({ status: statusSelect.value })
+          }
+        );
+
+        document.getElementById("adminDashboardMessage").textContent =
+          "Status updated successfully.";
+      } catch (error) {
+        document.getElementById("adminDashboardMessage").textContent =
+          "Update failed: " + error.message;
+      } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = "Save status";
+      }
+    });
+
+    card.appendChild(saveButton);
+    container.appendChild(card);
+  });
+}
+
+function logoutVumorenAdmin() {
+  vumorenAdminAccessToken = null;
+
+  document.getElementById("vumorenAdminDashboard").hidden = true;
+  document.getElementById("adminLoginMessage").textContent =
+    "You have signed out.";
+
+  document.getElementById("adminServiceRequests").replaceChildren();
+  document.getElementById("adminEnquiries").replaceChildren();
+  document.getElementById("adminProviderApplications").replaceChildren();
+}
+
+ toggleProviderFields();
 
 </script>
 </body>
