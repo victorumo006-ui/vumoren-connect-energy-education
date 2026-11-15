@@ -277,30 +277,70 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
     <p id="adminLoginMessage" role="status" aria-live="polite"></p>
   </div>
 
-  <div id="vumorenAdminDashboard" class="card" hidden>
-    <h3>Management Centre</h3>
-    <p id="adminWelcome">Administrator access verified.</p>
+<div id="vumorenAdminDashboard" class="card" hidden>
+  <h3>VUMOREN CONNECT Management Centre</h3>
+  <p id="adminWelcome">Administrator access verified.</p>
 
-    <button type="button" onclick="loadVumorenAdminData()">Refresh Records</button>
-    <button type="button" onclick="logoutVumorenAdmin()">Sign Out</button>
-
-    <p id="adminDashboardMessage" role="status" aria-live="polite"></p>
-
-    <div class="admin-record-group">
-      <h3>Service Requests</h3>
-      <div id="adminServiceRequests"></div>
+  <div class="grid">
+    <div class="card">
+      <h3>Total Service Requests</h3>
+      <p id="countServiceRequests">0</p>
     </div>
-
-    <div class="admin-record-group">
-      <h3>Customer Enquiries</h3>
-      <div id="adminEnquiries"></div>
+    <div class="card">
+      <h3>Total Enquiries</h3>
+      <p id="countEnquiries">0</p>
     </div>
-
-    <div class="admin-record-group">
+    <div class="card">
       <h3>Technician Applications</h3>
-      <div id="adminProviderApplications"></div>
+      <p id="countProviders">0</p>
     </div>
   </div>
+
+  <button type="button" onclick="loadVumorenAdminData()">Refresh All Records</button>
+  <button type="button" onclick="exportVumorenAdminCSV()">Export CSV</button>
+  <button type="button" onclick="logoutVumorenAdmin()">Sign Out</button>
+
+  <p id="adminDashboardMessage" role="status" aria-live="polite"></p>
+
+  <div class="admin-record-group">
+    <h3>Service Requests</h3>
+    <input type="search" id="searchServiceRequests" placeholder="Search service requests..." oninput="renderVumorenAdminRecords('service_requests')">
+    <select id="filterServiceRequests" onchange="renderVumorenAdminRecords('service_requests')">
+      <option value="">All statuses</option>
+      <option value="pending">Pending</option>
+      <option value="in_progress">In progress</option>
+      <option value="completed">Completed</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+    <div id="adminServiceRequests"></div>
+  </div>
+
+  <div class="admin-record-group">
+    <h3>Customer Enquiries</h3>
+    <input type="search" id="searchEnquiries" placeholder="Search customer enquiries..." oninput="renderVumorenAdminRecords('enquiries')">
+    <select id="filterEnquiries" onchange="renderVumorenAdminRecords('enquiries')">
+      <option value="">All statuses</option>
+      <option value="new">New</option>
+      <option value="in_progress">In progress</option>
+      <option value="resolved">Resolved</option>
+    </select>
+    <div id="adminEnquiries"></div>
+  </div>
+
+  <div class="admin-record-group">
+    <h3>Technician Applications</h3>
+    <input type="search" id="searchProviderApplications" placeholder="Search technician applications..." oninput="renderVumorenAdminRecords('provider_applications')">
+    <select id="filterProviderApplications" onchange="renderVumorenAdminRecords('provider_applications')">
+      <option value="">All statuses</option>
+      <option value="pending">Pending</option>
+      <option value="under_review">Under review</option>
+      <option value="approved">Approved</option>
+      <option value="rejected">Rejected</option>
+    </select>
+    <div id="adminProviderApplications"></div>
+  </div>
+</div>
+ 
 </section>
  
 <section class="section" id="faq">
@@ -740,11 +780,17 @@ async function loginVumorenAdmin(event) {
   }
 }
 
+const vumorenAdminRecords = {
+  service_requests: [],
+  enquiries: [],
+  provider_applications: []
+};
+
 async function loadVumorenAdminData() {
   if (!vumorenAdminAccessToken) return;
 
   const message = document.getElementById("adminDashboardMessage");
-  message.textContent = "Loading records...";
+  message.textContent = "Loading all management records...";
 
   const queries = {
     service_requests:
@@ -752,31 +798,68 @@ async function loadVumorenAdminData() {
     enquiries:
       "select=id,request_code,customer_name,phone,email,subject,message,status,created_at&order=created_at.desc",
     provider_applications:
-      "select=id,application_code,applicant_name,phone,email,skills,years_experience,service_area,qualifications,work_summary,admin_notes,status,created_at&order=created_at.desc"
+      "select=id,application_code,applicant_name,phone,email,skills,years_experience,service_area,qualifications,work_summary,admin_notes,status,created_at,updated_at&order=created_at.desc"
   };
 
   try {
     for (const table of Object.keys(VUMOREN_ADMIN_TABLES)) {
-      const records = await vumorenAdminRequest(
+      vumorenAdminRecords[table] = await vumorenAdminRequest(
         "/rest/v1/" + table + "?" + queries[table]
       );
-
-      renderVumorenAdminRecords(table, records);
     }
 
-    message.textContent = "Records loaded successfully.";
+    document.getElementById("countServiceRequests").textContent =
+      vumorenAdminRecords.service_requests.length;
+
+    document.getElementById("countEnquiries").textContent =
+      vumorenAdminRecords.enquiries.length;
+
+    document.getElementById("countProviders").textContent =
+      vumorenAdminRecords.provider_applications.length;
+
+    Object.keys(VUMOREN_ADMIN_TABLES).forEach(table => {
+      renderVumorenAdminRecords(table);
+    });
+
+    message.textContent = "All records and dashboard totals updated successfully.";
   } catch (error) {
     message.textContent = "Could not load records: " + error.message;
   }
 }
 
-function renderVumorenAdminRecords(table, records) {
+function renderVumorenAdminRecords(table) {
   const config = VUMOREN_ADMIN_TABLES[table];
   const container = document.getElementById(config.target);
+  const search = document.getElementById(
+    table === "service_requests" ? "searchServiceRequests" :
+    table === "enquiries" ? "searchEnquiries" :
+    "searchProviderApplications"
+  );
+
+  const filter = document.getElementById(
+    table === "service_requests" ? "filterServiceRequests" :
+    table === "enquiries" ? "filterEnquiries" :
+    "filterProviderApplications"
+  );
+
   container.replaceChildren();
 
-  if (!records || records.length === 0) {
-    container.textContent = "No records found.";
+  const term = search.value.trim().toLowerCase();
+  const selectedStatus = filter.value;
+
+  const records = vumorenAdminRecords[table].filter(record => {
+    const matchesStatus = !selectedStatus || record.status === selectedStatus;
+
+    const searchableText = config.fields
+      .map(([label, field]) => String(record[field] ?? ""))
+      .join(" ")
+      .toLowerCase();
+
+    return matchesStatus && searchableText.includes(term);
+  });
+
+  if (records.length === 0) {
+    container.textContent = "No matching records found.";
     return;
   }
 
@@ -784,14 +867,30 @@ function renderVumorenAdminRecords(table, records) {
     const card = document.createElement("article");
     card.className = "card";
     card.style.margin = "12px 0";
+    card.style.borderLeft = "5px solid #1d6652";
+
+    const heading = document.createElement("h4");
+    heading.textContent =
+      record.request_code || record.application_code || "Management record";
+    card.appendChild(heading);
+
+    const badge = document.createElement("span");
+    badge.className = "status";
+    badge.textContent = String(record.status).replaceAll("_", " ");
+    card.appendChild(badge);
 
     config.fields.forEach(([label, field]) => {
-      if (record[field] === null || record[field] === undefined || record[field] === "") return;
+      if (field === "admin_notes" && table === "provider_applications") return;
+
+      const value = record[field];
+
+      if (value === null || value === undefined || value === "") return;
 
       const paragraph = document.createElement("p");
       const strong = document.createElement("strong");
+
       strong.textContent = label + ": ";
-      paragraph.append(strong, document.createTextNode(String(record[field])));
+      paragraph.append(strong, document.createTextNode(String(value)));
       card.appendChild(paragraph);
     });
 
@@ -811,37 +910,61 @@ function renderVumorenAdminRecords(table, records) {
     statusSelect.value = record.status;
     card.appendChild(statusSelect);
 
+    let notesInput = null;
+
+    if (table === "provider_applications") {
+      const notesLabel = document.createElement("label");
+      notesLabel.textContent = "Administrator review notes";
+      card.appendChild(notesLabel);
+
+      notesInput = document.createElement("textarea");
+      notesInput.rows = 3;
+      notesInput.maxLength = 2000;
+      notesInput.value = record.admin_notes || "";
+      notesInput.placeholder = "Enter internal review notes...";
+      card.appendChild(notesInput);
+    }
+
     const saveButton = document.createElement("button");
     saveButton.type = "button";
-    saveButton.className = "btn";
-    saveButton.style.cssText = "background:#123b32;color:white";
-    saveButton.textContent = "Save status";
+    saveButton.className = "btn primary";
+    saveButton.textContent = "Save changes";
 
     saveButton.addEventListener("click", async () => {
       saveButton.disabled = true;
       saveButton.textContent = "Saving...";
 
       try {
+        const updates = { status: statusSelect.value };
+
+        if (table === "provider_applications") {
+          updates.admin_notes = notesInput.value.trim();
+        }
+
         await vumorenAdminRequest(
-          "/rest/v1/" + table + "?id=eq." + encodeURIComponent(record.id),
+          "/rest/v1/" + table + "?id=eq." +
+          encodeURIComponent(record.id),
           {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
               "Prefer": "return=minimal"
             },
-            body: JSON.stringify({ status: statusSelect.value })
+            body: JSON.stringify(updates)
           }
         );
 
         document.getElementById("adminDashboardMessage").textContent =
-          "Status updated successfully.";
+          "Record updated successfully.";
+
+        await loadVumorenAdminData();
+
       } catch (error) {
         document.getElementById("adminDashboardMessage").textContent =
           "Update failed: " + error.message;
       } finally {
         saveButton.disabled = false;
-        saveButton.textContent = "Save status";
+        saveButton.textContent = "Save changes";
       }
     });
 
@@ -850,18 +973,67 @@ function renderVumorenAdminRecords(table, records) {
   });
 }
 
+function exportVumorenAdminCSV() {
+  if (!vumorenAdminAccessToken) return;
+
+  const tables = Object.keys(VUMOREN_ADMIN_TABLES);
+  const rows = [["Record type", "Reference", "Status", "Created"]];
+
+  tables.forEach(table => {
+    vumorenAdminRecords[table].forEach(record => {
+      rows.push([
+        table,
+        record.request_code || record.application_code || "",
+        record.status || "",
+        record.created_at || ""
+      ]);
+    });
+  });
+
+  const csv = rows.map(row =>
+    row.map(value =>
+      '"' + String(value).replace(/"/g, '""') + '"'
+    ).join(",")
+  ).join("\r\n");
+
+  const blob = new Blob([csv], {
+    type: "text/csv;charset=utf-8;"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "vumoren-connect-management-records.csv";
+  link.click();
+
+  URL.revokeObjectURL(url);
+
+  document.getElementById("adminDashboardMessage").textContent =
+    "Management report exported.";
+}
+
 function logoutVumorenAdmin() {
   vumorenAdminAccessToken = null;
 
+  Object.keys(vumorenAdminRecords).forEach(table => {
+    vumorenAdminRecords[table] = [];
+  });
+
   document.getElementById("vumorenAdminDashboard").hidden = true;
+
   document.getElementById("adminLoginMessage").textContent =
     "You have signed out.";
 
   document.getElementById("adminServiceRequests").replaceChildren();
   document.getElementById("adminEnquiries").replaceChildren();
   document.getElementById("adminProviderApplications").replaceChildren();
-}
 
+  document.getElementById("countServiceRequests").textContent = "0";
+  document.getElementById("countEnquiries").textContent = "0";
+  document.getElementById("countProviders").textContent = "0";
+ }
+                                      
  toggleProviderFields();
 
 </script>
