@@ -39,3 +39,301 @@ table{width:100%;border-collapse:collapse;margin-top:10px;background:white}th,td
 details{background:white;border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin:9px 0}summary{font-weight:bold;color:var(--g);cursor:pointer}
 .status{display:inline-block;background:#edf3ed;color:var(--g);border-radius:20px;padding:3px 9px;font-size:11px;font-weight:bold}
 footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-size:13px}
+@media(max-width:760px){header{align-items:flex-start;flex-direction:column}nav{gap:9px}.hero-inner,.calculator,.grid,.grid.two,.form-grid{grid-template-columns:1fr}.hero{padding-top:40px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand">VUMOREN <span>CONNECT</span></div>
+ <nav aria-label="Main navigation">
+  <a href="#energy">Solar tools</a><a href="#services">Services</a><a href="#efficiency">Save energy</a>
+  <a href="#education">Learning</a><a href="#training">Training</a><a href="#request">Enquiries</a><a href="#about">About</a>
+ </nav>
+</header>
+
+<section class="hero">
+ <div class="hero-inner">
+  <div>
+   <div class="eyebrow">Smart Energy & Education</div>
+   <h1>Practical digital support for stronger communities.</h1>
+   <p>Helping households, schools and small businesses understand clean-energy options while making practical learning resources easier to access.</p>
+   <a class="btn primary" href="#energy">Explore solar tools</a>
+   <a class="btn secondary" href="#education">Explore learning</a>
+  </div>
+  <div class="panel"><strong>Our connected priorities</strong><ul>
+   <li>☀️ Solar needs assessment and planning</li><li>🧰 Installation and maintenance enquiries</li>
+   <li>🤝 Customer and technician connections</li><li>📘 Technical and vocational learning</li><li>📱 Mobile-friendly resources</li>
+  </ul></div>
+ </div>
+</section>
+
+<main>
+<section class="section" id="energy">
+ <div class="heading"><div class="eyebrow" style="color:#1d6652">Pillar 01 · Clean energy</div>
+  <h2>SolarAccess – needs assessment tools</h2>
+  <p>Build an initial picture of your daily electricity needs. These tools provide planning estimates only, not a final engineering design or quotation.</p>
+ </div>
+ <div class="card">
+  <h3>1. Appliance-by-appliance energy assessment</h3>
+  <p>Add the appliances you intend to power. The calculator estimates daily energy consumption and a preliminary solar panel size.</p>
+  <div class="form-grid">
+   <div><label for="appliance">Appliance name</label><input id="appliance" placeholder="e.g. LED bulbs"></div>
+   <div><label for="applianceWatts">Power rating (watts)</label><input id="applianceWatts" type="number" min="1" placeholder="e.g. 10"></div>
+   <div><label for="applianceQty">Quantity</label><input id="applianceQty" type="number" min="1" step="1" value="1"></div>
+   <div><label for="applianceHours">Hours used per day</label><input id="applianceHours" type="number" min="0.1" max="24" step="0.1" placeholder="e.g. 6"></div>
+  </div>
+  <button class="btn" style="background:var(--g);color:white" type="button" onclick="addAppliance()">Add appliance</button>
+  <button class="btn" style="background:#e9eee8;color:var(--g)" type="button" onclick="clearAppliances()">Clear list</button>
+  <div class="table-wrap"><table><thead><tr><th>Appliance</th><th>Qty</th><th>Watts each</th><th>Hours/day</th><th>Energy/day</th><th>Action</th></tr></thead><tbody id="applianceRows"><tr><td colspan="6">No appliances added yet.</td></tr></tbody></table></div>
+  <div class="form-grid">
+   <div><label for="sun">Peak sun hours (assumption)</label><select id="sun"><option value="3">3 hours</option><option value="4" selected>4 hours</option><option value="5">5 hours</option></select></div>
+   <div><label for="autonomy">Battery backup target</label><select id="autonomy"><option value="0.5">Half day</option><option value="1" selected>1 day</option><option value="2">2 days</option></select></div>
+  </div>
+  <button class="btn" style="background:var(--g);color:white" type="button" onclick="assessSystem()">Calculate system estimate</button>
+  <div class="output" id="solarResults" aria-live="polite">Add appliances, then calculate to see your estimates.</div>
+  <p class="small">Planning assumptions: 75% solar energy derating, 80% usable battery capacity and 90% inverter efficiency. Actual performance varies with weather, shading, appliance starting current, battery chemistry, temperature, wiring and installation quality.</p>
+ </div>
+
+ <div class="grid two" style="margin-top:16px">
+  <article class="card"><h3>2. Inverter and battery planning</h3><p>For preliminary planning, the tool estimates a continuous inverter capacity using the total connected appliance watts and a battery energy requirement based on the selected backup period. Motor loads and surge currents need separate assessment.</p><span class="status">Included in assessment above</span></article>
+  <article class="card"><h3>3. Indicative equipment budget</h3><p>Enter quotations you have received to build a simple budget. The site does not claim to have live supplier prices.</p>
+   <label for="panelCost">Solar panel / total panel cost (₦)</label><input id="panelCost" type="number" min="0" placeholder="Enter quoted amount">
+   <label for="batteryCost">Battery cost (₦)</label><input id="batteryCost" type="number" min="0" placeholder="Enter quoted amount">
+   <label for="inverterCost">Inverter cost (₦)</label><input id="inverterCost" type="number" min="0" placeholder="Enter quoted amount">
+   <label for="otherCost">Other equipment and installation (₦)</label><input id="otherCost" type="number" min="0" placeholder="Enter quoted amount">
+   <button class="btn" style="background:var(--g);color:white" onclick="estimateBudget()" type="button">Calculate my budget</button>
+   <div class="output" id="budgetResult" aria-live="polite">Your budget total will appear here.</div>
+  </article>
+ </div>
+ <div class="note"><strong>Important safety notice:</strong> These are educational estimates, not installation instructions. A qualified solar/electrical professional must confirm cable sizes, protection devices, earthing, battery configuration, inverter surge rating, structural mounting and applicable standards. Do not work on live electrical equipment.</div>
+</section>
+
+<section class="section" id="services">
+ <div class="heading"><div class="eyebrow" style="color:#1d6652">Pillar 02 · Solar services</div><h2>Energy services and support</h2>
+ <p>Use the enquiry form to express interest in installation, assessment, maintenance or provider participation.</p></div>
+ <div class="grid">
+  <article class="card"><div class="icon">📝</div><h3>Installation requests</h3><p>Prepare an enquiry for home, school, shop or small-business solar assessment and installation.</p><a class="btn" style="background:var(--g);color:white" href="#request">Request support</a></article>
+  <article class="card"><div class="icon">🧑🏽‍🔧</div><h3>Technician connections</h3><p>We plan to connect customers with solar technicians and service providers. Providers will need identity, qualification and work-history checks before being listed as verified.</p><span class="status">Provider onboarding planned</span></article>
+  <article class="card"><div class="icon">🛠️</div><h3>Maintenance support</h3><p>Describe a system concern so that a qualified professional can advise on next steps.</p><a class="btn" style="background:var(--g);color:white" href="#request">Request maintenance</a></article>
+ </div>
+ <div class="card" style="margin-top:16px"><h3>For solar technicians and service providers</h3><p>Interested professionals can register their interest for a future provider directory. Submitting this demonstration form does not publish or verify a provider profile.</p><a class="btn" style="background:var(--g);color:white" href="#request" onclick="document.getElementById('requestType').value='Technician / service provider registration interest'">Register interest</a></div>
+</section>
+
+<section class="section" id="efficiency">
+ <div class="heading"><div class="eyebrow" style="color:#1d6652">Practical energy information</div><h2>Use electricity more efficiently</h2><p>Simple habits can reduce avoidable energy use and help households and businesses plan their electricity needs.</p></div>
+ <div class="grid">
+  <article class="card"><div class="icon">💡</div><h3>Lighting</h3><p>Use efficient LED lamps, switch off lights in unused spaces and make use of daylight where practical.</p></article>
+  <article class="card"><div class="icon">❄️</div><h3>Refrigeration</h3><p>Keep refrigerator doors closed, allow ventilation around the unit, check door seals and avoid placing hot food directly inside.</p></article>
+  <article class="card"><div class="icon">🔌</div><h3>Appliance choices</h3><p>Check appliance energy labels and compare power ratings before purchase. Unplug idle equipment where safe and appropriate.</p></article>
+  <article class="card"><div class="icon">📊</div><h3>Plan usage</h3><p>List essential appliances, estimate their daily hours and prioritise critical loads when planning a backup system.</p></article>
+  <article class="card"><div class="icon">🏫</div><h3>Schools</h3><p>Switch off unused classroom equipment and plan computer, lighting and practical-lab use around available power.</p></article>
+  <article class="card"><div class="icon">🏪</div><h3>Small businesses</h3><p>Identify equipment that must run continuously, especially refrigeration, and seek professional advice on reliable backup power.</p></article>
+ </div>
+</section>
+
+<section class="section" id="education">
+ <div class="heading"><div class="eyebrow" style="color:#1d6652">Pillar 03 · Digital learning</div><h2>EduConnect – learning resources</h2><p>Lightweight introductory resources designed for mobile access and offline reading.</p></div>
+ <div class="grid">
+  <article class="card resource"><div class="icon">📚</div><h3>Study skills</h3><p>Study planning, revision and effective learning habits.</p><button class="btn" onclick="downloadResource('study')">Download study guide</button></article>
+  <article class="card resource"><div class="icon">🔌</div><h3>Electrical safety</h3><p>Basic precautions for learners and households.</p><button class="btn" onclick="downloadResource('safety')">Download safety guide</button></article>
+  <article class="card resource"><div class="icon">👩‍🏫</div><h3>Teacher support</h3><p>Checklist for preparing lessons and practical activities.</p><button class="btn" onclick="downloadResource('teacher')">Download teacher checklist</button></article>
+  <article class="card resource"><div class="icon">☀️</div><h3>Solar basics</h3><p>Introduction to panels, batteries and solar systems.</p><button class="btn" onclick="downloadResource('solar')">Download solar guide</button></article>
+  <article class="card resource"><div class="icon">⚙️</div><h3>Electrical fundamentals</h3><p>Introductory notes on voltage, current, power and energy.</p><button class="btn" onclick="downloadResource('electrical')">Download fundamentals</button></article>
+  <article class="card resource"><div class="icon">📝</div><h3>Revision planner</h3><p>A simple weekly revision planning template.</p><button class="btn" onclick="downloadResource('planner')">Download revision planner</button></article>
+ </div>
+ <p class="small">These are original introductory learning materials, not official WAEC or NECO publications or examination papers. Always check the relevant examination body's official announcements for current syllabuses and requirements.</p>
+</section>
+
+<section class="section" id="training">
+ <div class="heading"><div class="eyebrow" style="color:#1d6652">Pillar 04 · Skills development</div><h2>Vocational and technical learning centre</h2><p>Build foundational knowledge before progressing to supervised practical training with qualified instructors.</p></div>
+ <div class="grid">
+  <article class="card"><div class="icon">☀️</div><h3>Module 1: Solar fundamentals</h3><p>How photovoltaic panels produce electricity; basic system components and energy units.</p><span class="status">Introductory learning outline</span></article>
+  <article class="card"><div class="icon">🔋</div><h3>Module 2: Batteries and storage</h3><p>Battery capacity, voltage, energy storage concepts, safe handling and professional maintenance.</p><span class="status">Introductory learning outline</span></article>
+  <article class="card"><div class="icon">🔄</div><h3>Module 3: Inverters and controllers</h3><p>Understand DC and AC, inverter functions and the role of charge controllers.</p><span class="status">Introductory learning outline</span></article>
+  <article class="card"><div class="icon">⚡</div><h3>Module 4: Electrical fundamentals</h3><p>Voltage, current, resistance, power, energy and basic circuit concepts.</p><span class="status">Introductory learning outline</span></article>
+  <article class="card"><div class="icon">🦺</div><h3>Module 5: Safety and good practice</h3><p>Hazard awareness, isolation principles, protective equipment and when to call a professional.</p><span class="status">Introductory learning outline</span></article>
+  <article class="card"><div class="icon">🧰</div><h3>Module 6: Vocational pathways</h3><p>Explore supervised learning pathways in solar, electrical installation, CCTV and electronics.</p><span class="status">Practical training partnerships planned</span></article>
+ </div>
+ <div class="card" style="margin-top:16px"><h3>Practice assessment</h3><p>Answer these introductory questions and check your understanding.</p>
+  <label for="q1">1. Which component converts battery DC electricity into AC electricity?</label><select id="q1"><option value="">Choose an answer</option><option value="controller">Charge controller</option><option value="inverter">Inverter</option><option value="panel">Solar panel</option></select>
+  <label for="q2">2. What does kWh measure?</label><select id="q2"><option value="">Choose an answer</option><option value="power">Instantaneous power</option><option value="energy">Electrical energy used or produced over time</option><option value="voltage">Voltage only</option></select>
+  <label for="q3">3. Who should carry out electrical installation and repair work?</label><select id="q3"><option value="">Choose an answer</option><option value="anyone">Anyone with basic tools</option><option value="qualified">An appropriately qualified professional</option><option value="child">A child under supervision</option></select>
+  <button class="btn" style="background:var(--g);color:white" onclick="checkQuiz()" type="button">Check my answers</button>
+  <div class="output" id="quizFeedback" aria-live="polite">Your score and explanations will appear here.</div>
+ </div>
+</section>
+
+<section class="section" id="request">
+ <div class="heading"><div class="eyebrow" style="color:#1d6652">Community and provider support</div><h2>Send an enquiry or register interest</h2><p>Choose the type of support you are interested in and provide a short description.</p></div>
+ <div class="card">
+  <form id="enquiryForm" onsubmit="demoSubmit(event)">
+   <div class="form-grid">
+    <div><label for="name">Name</label><input id="name" required maxlength="80" placeholder="Your name"></div>
+    <div><label for="community">Community / town</label><input id="community" required maxlength="100" placeholder="Your community"></div>
+   </div>
+   <label for="requestType">Type of enquiry</label>
+   <select id="requestType" required>
+    <option>Solar energy assessment</option><option>Solar installation request</option><option>Connect with a solar technician</option>
+    <option>Solar system maintenance</option><option>Technician / service provider registration interest</option>
+    <option>Energy-saving information</option><option>Vocational training information</option><option>Learning resources</option><option>Teacher support</option>
+   </select>
+   <label for="message">Describe your needs</label><textarea id="message" rows="4" maxlength="1200" placeholder="Briefly describe the support you need"></textarea>
+   <button class="btn" style="background:var(--g);color:white" type="submit">Submit demo enquiry</button>
+   <p class="small">Demonstration only: this form does not transmit or save your information. Do not enter passwords, bank details or sensitive personal information.</p>
+   <div class="output" id="formmessage" aria-live="polite">Your demonstration confirmation will appear here.</div>
+  </form>
+ </div>
+</section>
+
+<section class="section" id="faq">
+ <div class="heading"><div class="eyebrow" style="color:#1d6652">Helpful information</div><h2>Frequently asked questions</h2></div>
+ <details><summary>Is the solar assessment a final system design?</summary><p>No. It is an educational estimate based on the figures entered. A qualified professional must inspect the site and confirm the design, equipment ratings and safety requirements.</p></details>
+ <details><summary>Are the equipment prices live market prices?</summary><p>No. The budget tool adds quotation amounts entered by the user. It does not retrieve supplier prices or guarantee equipment availability.</p></details>
+ <details><summary>Can I currently book a technician through this website?</summary><p>Not yet. Technician registration, verification, directory listings and customer matching are planned features. The current form only demonstrates how an enquiry could be collected.</p></details>
+ <details><summary>Are the learning resources official examination materials?</summary><p>No. They are introductory resources prepared for general learning. They are not official WAEC or NECO papers or publications.</p></details>
+ <details><summary>Can I use the website on a phone?</summary><p>Yes. The page is designed to adapt to mobile screens. Downloadable text resources can be saved for offline reading after download.</p></details>
+</section>
+
+<section class="section" id="about">
+ <div class="heading"><div class="eyebrow" style="color:#1d6652">About the initiative</div><h2>Local innovation for digital inclusion</h2>
+ <p>VUMOREN CONNECT – Smart Energy & Education is an initiative by V. Umoren Multi Services Ltd. It aims to make practical energy information, service connections and learning support more accessible to underserved communities.</p></div>
+ <div class="grid two">
+  <article class="card"><h3>Intended community impact</h3><p>Support better-informed energy decisions, encourage efficient electricity use, improve access to introductory technical learning and create a pathway toward trusted local service connections.</p></article>
+  <article class="card"><h3>Development approach</h3><p>Start with accessible digital tools and learning content, then develop secure request handling, provider verification, partnerships and community feedback processes.</p></article>
+ </div>
+ <div class="note"><strong>Current prototype status:</strong> Solar assessment, quotation-based budget calculation, downloadable learning resources, quiz feedback and demo enquiry confirmation run in the browser. Enquiry processing, technician verification and matching, live pricing, user accounts and structured instructor-led courses are not yet connected or operational.</div>
+</section>
+</main>
+<footer><strong>VUMOREN CONNECT – Smart Energy & Education</strong><br>A digital inclusion prototype · V. Umoren Multi Services Ltd<br>Practical energy information and accessible learning support.<br><a href="#faq" style="color:#d8ef9b">FAQs</a> · <a href="#about" style="color:#d8ef9b">About and development status</a></footer>
+
+<script>
+"use strict";
+const applianceList = [];
+
+function addAppliance() {
+ const name = document.getElementById("appliance").value.trim();
+ const watts = Number(document.getElementById("applianceWatts").value);
+ const qty = Number(document.getElementById("applianceQty").value);
+ const hours = Number(document.getElementById("applianceHours").value);
+ if (!name || watts <= 0 || qty <= 0 || !Number.isInteger(qty) || hours <= 0 || hours > 24) {
+  document.getElementById("solarResults").textContent = "Please enter an appliance name, positive wattage, a whole-number quantity and daily use between 0 and 24 hours.";
+  return;
+ }
+ applianceList.push({name, watts, qty, hours});
+ renderAppliances();
+ document.getElementById("appliance").value = "";
+ document.getElementById("applianceWatts").value = "";
+ document.getElementById("applianceQty").value = "1";
+ document.getElementById("applianceHours").value = "";
+ document.getElementById("solarResults").textContent = "Appliance added. Add more appliances or calculate your system estimate.";
+}
+
+function renderAppliances() {
+ const body = document.getElementById("applianceRows");
+ body.replaceChildren();
+ if (!applianceList.length) {
+  const row = body.insertRow(); const cell = row.insertCell();
+  cell.colSpan = 6; cell.textContent = "No appliances added yet."; return;
+ }
+ applianceList.forEach((item, index) => {
+  const row = body.insertRow();
+  [item.name, item.qty, item.watts, item.hours, (item.watts * item.qty * item.hours / 1000).toFixed(2) + " kWh"].forEach(value => {
+   row.insertCell().textContent = value;
+  });
+  const action = row.insertCell(); const remove = document.createElement("button");
+  remove.type = "button"; remove.textContent = "Remove"; remove.className = "btn";
+  remove.style.cssText = "background:#edf3ed;color:#123b32;padding:6px 9px";
+  remove.addEventListener("click", () => { applianceList.splice(index, 1); renderAppliances(); });
+  action.appendChild(remove);
+ });
+}
+
+function clearAppliances() {
+ applianceList.length = 0; renderAppliances();
+ document.getElementById("solarResults").textContent = "Appliance list cleared.";
+}
+
+function assessSystem() {
+ const output = document.getElementById("solarResults");
+ if (!applianceList.length) { output.textContent = "Please add at least one appliance first."; return; }
+ const totalWatts = applianceList.reduce((sum, a) => sum + a.watts * a.qty, 0);
+ const dailyKwh = applianceList.reduce((sum, a) => sum + a.watts * a.qty * a.hours / 1000, 0);
+ const sun = Number(document.getElementById("sun").value);
+ const autonomy = Number(document.getElementById("autonomy").value);
+ const panelW = Math.ceil((dailyKwh / (sun * 0.75)) / 50) * 50;
+ const inverterVa = Math.ceil((totalWatts * 1.25) / 100) * 100;
+ const batteryKwh = dailyKwh * autonomy / (0.8 * 0.9);
+ const batteryAh12v = Math.ceil((batteryKwh * 1000 / 12) / 10) * 10;
+ output.replaceChildren();
+ const lines = [
+  ["Connected appliance load", totalWatts.toLocaleString() + " W"],
+  ["Estimated daily energy", dailyKwh.toFixed(2) + " kWh/day"],
+  ["Indicative solar panel capacity", "About " + panelW.toLocaleString() + " W"],
+  ["Preliminary inverter capacity", "At least about " + inverterVa.toLocaleString() + " VA (before surge review)"],
+  ["Estimated nominal battery storage", batteryKwh.toFixed(2) + " kWh"],
+  ["Illustrative 12 V battery equivalent", "About " + batteryAh12v.toLocaleString() + " Ah at 12 V (not a recommended configuration)"]
+ ];
+ lines.forEach(([label, value]) => {
+  const p = document.createElement("p"); const strong = document.createElement("strong");
+  strong.textContent = label + ": "; p.append(strong, document.createTextNode(value)); output.appendChild(p);
+ });
+ const warning = document.createElement("p"); warning.className = "small";
+ warning.textContent = "These are rough planning estimates only. The 12 V equivalent is a mathematical illustration, not a battery-bank design. Professional assessment is required for system voltage, battery chemistry, surge loads, protection, cables and installation.";
+ output.appendChild(warning);
+}
+
+function estimateBudget() {
+ const ids = ["panelCost","batteryCost","inverterCost","otherCost"];
+ const values = ids.map(id => Number(document.getElementById(id).value) || 0);
+ if (values.some(value => value < 0)) { document.getElementById("budgetResult").textContent = "Please enter zero or positive quotation amounts."; return; }
+ const total = values.reduce((a,b) => a+b, 0);
+ document.getElementById("budgetResult").textContent = "Total of your entered quotations: ₦" + total.toLocaleString("en-NG") + ". This is not a live market quotation.";
+}
+
+const resources = {
+ study:{name:"Study Skills Guide",content:"VUMOREN CONNECT – STUDY SKILLS GUIDE\n\n1. Set clear learning goals.\n2. Create a realistic study timetable.\n3. Read and take short notes.\n4. Practise questions regularly.\n5. Review difficult topics.\n6. Ask teachers or mentors for help.\n7. Take breaks and get enough rest."},
+ safety:{name:"Basic Electrical Safety",content:"VUMOREN CONNECT – BASIC ELECTRICAL SAFETY\n\n1. Never touch exposed electrical wires.\n2. Do not attempt live electrical repairs.\n3. Keep electrical equipment away from water.\n4. Avoid overloading sockets.\n5. Use correctly rated equipment and protective devices.\n6. Keep children away from electrical installations.\n7. Electrical installation and repair work must be done by appropriately qualified persons."},
+ teacher:{name:"Teacher Lesson Checklist",content:"VUMOREN CONNECT – TEACHER LESSON CHECKLIST\n\nBefore the lesson:\n1. Identify learning objectives.\n2. Prepare teaching materials.\n3. Check practical equipment for safety.\n\nDuring the lesson:\n4. Explain concepts clearly.\n5. Encourage questions and participation.\n6. Demonstrate practical activities safely.\n\nAfter the lesson:\n7. Assess learners' understanding.\n8. Give feedback and plan follow-up activities."},
+ solar:{name:"Solar Energy Basics",content:"VUMOREN CONNECT – SOLAR ENERGY BASICS\n\nSolar photovoltaic panels convert sunlight into direct-current (DC) electricity.\nAn inverter converts DC electricity to alternating-current (AC) for compatible appliances.\nA battery stores energy for later use.\nA charge controller regulates charging in systems that require one.\nSystem sizing depends on daily energy use, sunlight, losses, backup needs and surge loads.\nA qualified professional must design and install the system."},
+ electrical:{name:"Electrical Fundamentals",content:"VUMOREN CONNECT – ELECTRICAL FUNDAMENTALS\n\nVoltage (V) is electrical potential difference.\nCurrent (A) is the rate of electric charge flow.\nResistance (ohms) opposes current flow.\nFor a simple DC circuit, power in watts = voltage × current.\nEnergy is power used over time; 1 kilowatt-hour is 1,000 watts used for one hour.\nThese are introductory concepts, not instructions for working on live circuits."},
+ planner:{name:"Weekly Revision Planner",content:"VUMOREN CONNECT – WEEKLY REVISION PLANNER\n\nSubject/topic:\nLearning goal:\nMonday:\nTuesday:\nWednesday:\nThursday:\nFriday:\nSaturday: Review and practise questions\nSunday: Rest and prepare for the next week\n\nAt the end of the week, note what you understood and what needs more practice."}
+};
+
+function downloadResource(key) {
+ const item = resources[key]; if (!item) return;
+ const file = new Blob([item.content], {type:"text/plain;charset=utf-8"});
+ const url = URL.createObjectURL(file); const link = document.createElement("a");
+ link.href = url; link.download = item.name.replaceAll(" ","-") + ".txt";
+ document.body.appendChild(link); link.click(); link.remove();
+ setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+function checkQuiz() {
+ const answers = [
+  {id:"q1",correct:"inverter",explain:"An inverter converts DC electricity into AC electricity."},
+  {id:"q2",correct:"energy",explain:"A kilowatt-hour (kWh) is a unit of electrical energy."},
+  {id:"q3",correct:"qualified",explain:"Electrical installation and repair work should be done by appropriately qualified professionals."}
+ ];
+ let score = 0; const feedback = [];
+ answers.forEach((q,index) => {
+  const value = document.getElementById(q.id).value;
+  if (value === q.correct) score++;
+  feedback.push((index+1) + ". " + (value === q.correct ? "Correct. " : "Review this one. ") + q.explain);
+ });
+ const box = document.getElementById("quizFeedback");
+ box.replaceChildren();
+ const total = document.createElement("p"); total.className = "metric";
+ total.textContent = "Your score: " + score + " / " + answers.length; box.appendChild(total);
+ feedback.forEach(line => { const p = document.createElement("p"); p.textContent = line; box.appendChild(p); });
+}
+
+function demoSubmit(event) {
+ event.preventDefault();
+ const name = document.getElementById("name").value.trim();
+ const type = document.getElementById("requestType").value;
+ const box = document.getElementById("formmessage");
+ box.textContent = "Thank you, " + name + ". Your " + type.toLowerCase() + " enquiry has been demonstrated successfully. It has NOT been sent or saved. A secure request service will be needed before real submissions can be received.";
+}
+</script>
+</body>
+</html>
