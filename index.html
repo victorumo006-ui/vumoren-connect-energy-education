@@ -4,360 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#123b32">
+<meta name="description" content="VUMOREN CONNECT – practical clean-energy planning, solar service enquiries and accessible technical learning.">
 <title>VUMOREN CONNECT | Smart Energy & Education</title>
 <style>
-:root{--g:#123b32;--g2:#1d6652;--lime:#d8ef9b;--cream:#f6f7f1;--ink:#18231f;--muted:#66736d;--line:#dfe6df}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;font-family:Arial,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55}
-header{background:var(--g);color:white;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;gap:15px;position:sticky;top:0;z-index:5}
-.brand{font-weight:800;font-size:18px}.brand span{color:var(--lime)}
-nav{display:flex;gap:13px;flex-wrap:wrap}
-nav a{color:white;text-decoration:none;font-size:13px}
-.hero{padding:60px 6%;background:linear-gradient(120deg,var(--g),var(--g2));color:white}
-.hero-inner{max-width:1100px;margin:auto;display:grid;grid-template-columns:1.4fr .8fr;gap:30px;align-items:center}
-.eyebrow{color:var(--lime);font-size:12px;font-weight:bold;letter-spacing:1.4px;text-transform:uppercase}
-h1{font-size:clamp(34px,5vw,56px);line-height:1.1;margin:12px 0}
-.hero p{color:#e3eee8;font-size:17px}
-.panel{background:#ffffff12;border:1px solid #ffffff30;border-radius:16px;padding:22px}
-.panel li{margin:9px 0}
-.btn{display:inline-block;padding:12px 17px;border:0;border-radius:8px;font-weight:bold;text-decoration:none;cursor:pointer;margin:5px 5px 5px 0}
-.primary{background:var(--lime);color:var(--g)}
-.secondary{background:transparent;border:1px solid white;color:white}
-main{max-width:1100px;margin:auto;padding:30px 5% 65px}
-.section{padding:28px 0;scroll-margin-top:100px}
-.heading{max-width:720px;margin-bottom:20px}
-.heading h2{color:var(--g);font-size:30px;margin:5px 0}
-.heading p,.card p{color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.card{background:white;border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 5px 18px #163b2a08}
-.card h3{color:var(--g);margin:8px 0}
-.icon{font-size:27px}
+:root{--g:#123b32;--g2:#1d6652;--lime:#d8ef9b;--cream:#f6f7f1;--ink:#18231f;--muted:#66736d;--line:#dfe6df;--white:#fff;--gold:#fff5d8}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;font-family:Arial,sans-serif;background:var(--cream);color:var(--ink);line-height:1.6}
+header{background:var(--g);color:white;padding:14px 5%;display:flex;justify-content:space-between;align-items:center;gap:15px;position:sticky;top:0;z-index:10}
+.brand{font-weight:800;font-size:18px;white-space:nowrap}.brand span{color:var(--lime)}
+nav{display:flex;gap:12px;flex-wrap:wrap}nav a{color:white;text-decoration:none;font-size:13px}nav a:hover{text-decoration:underline;color:var(--lime)}
+.hero{padding:58px 6%;background:linear-gradient(120deg,var(--g),var(--g2));color:white}
+.hero-inner{max-width:1120px;margin:auto;display:grid;grid-template-columns:1.35fr .85fr;gap:28px;align-items:center}
+.eyebrow{color:var(--lime);font-size:12px;font-weight:bold;letter-spacing:1.3px;text-transform:uppercase}
+h1{font-size:clamp(34px,5vw,56px);line-height:1.1;margin:12px 0}.hero p{color:#e3eee8;font-size:17px}
+.panel{background:#ffffff12;border:1px solid #ffffff30;border-radius:16px;padding:22px}.panel li{margin:8px 0}
+.btn{display:inline-block;padding:11px 16px;border:0;border-radius:8px;font-weight:bold;text-decoration:none;cursor:pointer;margin:5px 5px 5px 0;font:inherit;font-weight:bold}
+.primary{background:var(--lime);color:var(--g)}.secondary{background:transparent;border:1px solid white;color:white}
+main{max-width:1120px;margin:auto;padding:28px 5% 60px}.section{padding:28px 0;scroll-margin-top:100px}
+.heading{max-width:760px;margin-bottom:20px}.heading h2{color:var(--g);font-size:30px;margin:5px 0}.heading p,.card p{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.grid.two{grid-template-columns:repeat(2,1fr)}
+.card{background:white;border:1px solid var(--line);border-radius:14px;padding:19px;box-shadow:0 5px 18px #163b2a08}
+.card h3{color:var(--g);margin:7px 0}.icon{font-size:26px}
 .calculator{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 label{display:block;font-weight:bold;font-size:14px;margin:12px 0 5px}
-input,select,textarea{width:100%;padding:12px;border:1px solid #cbd7ce;border-radius:8px;background:white;font:inherit}
-.result{background:var(--g);color:white;border-radius:14px;padding:22px}
-.big{font-size:32px;font-weight:bold;color:var(--lime)}
-.note{background:#fff8df;border:1px solid #f0df9f;padding:13px;border-radius:9px;color:#65541d;font-size:13px;margin-top:15px}
-.small{font-size:12px;color:var(--muted)}
-.resource{display:flex;flex-direction:column;gap:8px}
-.resource button{align-self:flex-start;background:var(--g);color:white}
+input,select,textarea{width:100%;padding:11px;border:1px solid #cbd7ce;border-radius:8px;background:white;font:inherit;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--g2);outline-offset:1px}
+.result{background:var(--g);color:white;border-radius:14px;padding:20px}.big{font-size:30px;font-weight:bold;color:var(--lime)}
+.note{background:var(--gold);border:1px solid #f0df9f;padding:13px;border-radius:9px;color:#65541d;font-size:13px;margin-top:15px}
+.small{font-size:12px;color:var(--muted)}.resource{display:flex;flex-direction:column;gap:7px}.resource button{align-self:flex-start;background:var(--g);color:white}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.output{background:#eef5eb;border:1px solid #d5e5d4;border-radius:10px;padding:13px;margin-top:12px;min-height:50px}
+.metric{font-size:24px;font-weight:bold;color:var(--g)}.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin-top:10px;background:white}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}th{background:#edf3ed;color:var(--g)}
+details{background:white;border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin:9px 0}summary{font-weight:bold;color:var(--g);cursor:pointer}
+.status{display:inline-block;background:#edf3ed;color:var(--g);border-radius:20px;padding:3px 9px;font-size:11px;font-weight:bold}
 footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-size:13px}
-@media(max-width:760px){
- header{align-items:flex-start;flex-direction:column}
- .hero-inner,.calculator,.grid,.form-grid{grid-template-columns:1fr}
- .hero{padding-top:40px}
-}
-</style>
-</head>
-<body>
-<header>
- <div class="brand">VUMOREN <span>CONNECT</span></div>
- <nav>
-  <a href="#energy">Solar</a>
-  <a href="#services">Services</a>
-  <a href="#education">Learning</a>
-  <a href="#training">Training</a>
-  <a href="#request">Support</a>
-  <a href="#about">About</a>
- </nav>
-</header>
-
-<section class="hero">
- <div class="hero-inner">
-  <div>
-   <div class="eyebrow">Smart Energy & Education</div>
-   <h1>Practical digital support for stronger communities.</h1>
-   <p>Helping households and small businesses explore clean-energy options while making practical learning resources easier to access.</p>
-   <a class="btn primary" href="#energy">Explore solar tools</a>
-   <a class="btn secondary" href="#education">Explore learning</a>
-  </div>
-  <div class="panel">
-   <strong>Our connected priorities</strong>
-   <ul>
-    <li>☀️ Clean-energy planning</li>
-    <li>🧰 Solar service support</li>
-    <li>📘 Technical education</li>
-    <li>📱 Mobile-friendly learning</li>
-    <li>🤝 Community connection</li>
-   </ul>
-  </div>
- </div>
-</section>
-
-<main>
-<section class="section" id="energy">
- <div class="heading">
-  <div class="eyebrow" style="color:#1d6652">Pillar 01 · Clean energy</div>
-  <h2>SolarAccess</h2>
-  <p>Understand your electricity needs and explore an initial estimate before speaking with a qualified solar professional.</p>
- </div>
- <div class="grid">
-  <article class="card"><div class="icon">⚡</div><h3>Energy planning</h3><p>Estimate the energy required by your appliances.</p></article>
-  <article class="card"><div class="icon">🧰</div><h3>Installation support</h3><p>Explore solar assessment and installation services.</p></article>
-  <article class="card"><div class="icon">🌱</div><h3>Energy awareness</h3><p>Learn about efficient appliances and responsible energy use.</p></article>
- </div>
- <div class="card" style="margin-top:18px">
-  <h3>Solar energy estimator</h3>
-  <p>Enter the combined power and daily usage of the appliances you want to run.</p>
-  <div class="calculator">
-   <div>
-    <label for="watts">Combined appliance power (watts)</label>
-    <input id="watts" type="number" min="1" placeholder="Example: 300">
-    <label for="hours">Average daily use (hours)</label>
-    <input id="hours" type="number" min="0.1" max="24" step="0.1" placeholder="Example: 5">
-    <label for="sun">Peak sun hours per day</label>
-    <select id="sun">
-     <option value="4">4 hours</option>
-     <option value="3">3 hours</option>
-     <option value="5">5 hours</option>
-    </select>
-    <button class="btn" style="background:var(--g);color:white" onclick="calculate()">Calculate estimate</button>
-   </div>
-   <div class="result" aria-live="polite">
-    <div>Estimated daily energy</div>
-    <div class="big" id="daily">— kWh</div>
-    <p id="system">Enter your figures to see an estimate.</p>
-    <p class="small" style="color:#d6e4dc">This is an indicative panel estimate, not a final system design. Battery, inverter, surge loads, shading, wiring and safety need professional assessment.</p>
-   </div>
-  </div>
- </div>
-</section>
-  
-<section class="section" id="services">
- <div class="heading">
-  <div class="eyebrow" style="color:#1d6652">Pillar 02 · Solar services</div>
-  <h2>Energy services and support</h2>
-  <p>Explore support from energy assessment to professional installation and maintenance.</p>
- </div>
- <div class="grid">
-  <article class="card">
-   <div class="icon">📝</div>
-   <h3>Installation requests</h3>
-   <p>Prepare an enquiry for solar assessment, home installation or business energy needs.</p>
-   <a class="btn" style="background:var(--g);color:white" href="#request">Request support</a>
-  </article>
-  <article class="card">
-   <div class="icon">🧑🏽‍🔧</div>
-   <h3>Solar technicians</h3>
-   <p>We are developing a network to connect customers with solar technicians and service providers.</p>
-   <span class="small">Provider listings and verification: planned</span>
-  </article>
-  <article class="card">
-   <div class="icon">🛠️</div>
-   <h3>Maintenance support</h3>
-   <p>Describe a solar system concern and seek assistance from a qualified professional.</p>
-   <a class="btn" style="background:var(--g);color:white" href="#request">Ask for support</a>
-  </article>
- </div>
- <div class="note"><strong>Safety first:</strong> Solar installation, electrical testing, battery work and repairs must be handled by appropriately qualified professionals. Never handle exposed wiring.</div>
-</section>
-
-<section class="section" id="education">
- <div class="heading">
-  <div class="eyebrow" style="color:#1d6652">Pillar 03 · Digital learning</div>
-  <h2>EduConnect</h2>
-  <p>Accessible learning resources designed for mobile use and limited internet connectivity.</p>
- </div>
- <div class="grid">
-  <article class="card resource">
-   <div class="icon">📚</div><h3>Study skills</h3>
-   <p>Guidance on study timetables, revision and learning habits.</p>
-   <button class="btn" onclick="downloadResource('study')">Download study guide</button>
-  </article>
-  <article class="card resource">
-   <div class="icon">🔌</div><h3>Electrical safety</h3>
-   <p>Important introductory safety guidance for technical learners.</p>
-   <button class="btn" onclick="downloadResource('safety')">Download safety guide</button>
-  </article>
-  <article class="card resource">
-   <div class="icon">👩‍🏫</div><h3>Teacher support</h3>
-   <p>A simple checklist for preparing classroom lessons.</p>
-   <button class="btn" onclick="downloadResource('teacher')">Download teacher checklist</button>
-  </article>
- </div>
- <p class="small">Introductory demonstration resources, not official examination materials.</p>
-</section>
-
-<section class="section" id="training">
- <div class="heading">
-  <div class="eyebrow" style="color:#1d6652">Pillar 04 · Skills development</div>
-  <h2>Technical learning centre</h2>
-  <p>Explore foundational knowledge in solar energy and electrical technology.</p>
- </div>
- <div class="grid">
-  <article class="card">
-   <div class="icon">☀️</div><h3>Solar fundamentals</h3>
-   <p>Understand solar panels, batteries, charge controllers and inverters.</p>
-   <span class="small">Expanded course materials: planned</span>
-  </article>
-  <article class="card">
-   <div class="icon">🔧</div><h3>Vocational training</h3>
-   <p>Build knowledge in electrical principles, installation safety and technical skills.</p>
-   <span class="small">Structured practical training: planned</span>
-  </article>
-  <article class="card">
-   <div class="icon">📖</div><h3>Practice questions</h3>
-   <p>Test your understanding of basic solar technology.</p>
-   <label for="practice-answer">Which component converts battery DC electricity into AC electricity?</label>
-   <select id="practice-answer">
-    <option value="">Choose an answer</option>
-    <option value="controller">Charge controller</option>
-    <option value="inverter">Inverter</option>
-    <option value="panel">Solar panel</option>
-   </select>
-   <button class="btn" style="background:var(--g);color:white" onclick="checkPractice()">Check answer</button>
-   <p id="practice-feedback" aria-live="polite"></p>
-  </article>
- </div>
-</section>
-
-<section class="section" id="request">
- <div class="heading">
-  <div class="eyebrow" style="color:#1d6652">Community support</div>
-  <h2>Installation and support enquiries</h2>
-  <p>Tell us what kind of assistance you are interested in.</p>
- </div>
- <div class="card">
-  <form onsubmit="demoSubmit(event)">
-   <div class="form-grid">
-    <div><label for="name">Name</label><input id="name" required placeholder="Your name"></div>
-    <div><label for="community">Community / town</label><input id="community" required placeholder="Your community"></div>
-   </div>
-   <label for="type">Type of support</label>
-   <select id="type">
-    <option>Solar energy assessment</option>
-    <option>Solar installation request</option>
-    <option>Connect with a solar technician</option>
-    <option>Solar system maintenance</option>
-    <option>Energy-saving information</option>
-    <option>Vocational training information</option>
-    <option>Learning resources</option>
-    <option>Teacher support</option>
-   </select>
-   <label for="message">Describe your needs</label>
-   <textarea id="message" rows="4" placeholder="Briefly describe the support you need"></textarea>
-   <button class="btn" style="background:var(--g);color:white" type="submit">Submit demo enquiry</button>
-   <p class="small">Demonstration only: this form does not transmit or save your information.</p>
-   <p id="formmessage" aria-live="polite"></p>
-  </form>
- </div>
-</section>
-
-<section class="section" id="about">
- <div class="heading">
-  <div class="eyebrow" style="color:#1d6652">About the initiative</div>
-  <h2>Local innovation for digital inclusion</h2>
-  <p>VUMOREN CONNECT – Smart Energy & Education is an initiative by V. Umoren Multi Services Ltd. It aims to make practical energy information, service connections and learning support more accessible to underserved communities.</p>
- </div>
- <div class="note">
-  <strong>Development status:</strong> The solar estimator, sample downloads and practice question are designed to work in the browser. Enquiry processing, technician verification and matching, live pricing and structured online courses still require further development.
- </div>
-     </section>
-    
-</main>
-  <footer>
-  <strong>VUMOREN CONNECT – Smart Energy & Education</strong><br>
-  A digital inclusion prototype · V. Umoren Multi Services Ltd<br>
-  Practical energy information and accessible learning support.
-  </footer>
-<script>
-
-function calculate() {
-  const watts = Number(document.getElementById("watts").value);
-  const hours = Number(document.getElementById("hours").value);
-  const sun = Number(document.getElementById("sun").value);
-
-  const dailyOutput = document.getElementById("daily");
-  const systemOutput = document.getElementById("system");
-
-  if (watts <= 0 || hours <= 0 || hours > 24 || sun <= 0) {
-    dailyOutput.textContent = "Please check your entries";
-    systemOutput.textContent =
-      "Enter appliance power above zero and daily usage between 0 and 24 hours.";
-    return;
-  }
-
-  const daily = watts * hours / 1000;
-  const panel = daily / (sun * 0.75);
-  const recommended = Math.ceil(panel / 50) * 50;
-
-  dailyOutput.textContent = daily.toFixed(2) + " kWh";
-
-  systemOutput.textContent =
-    "Indicative solar-panel capacity: about " +
-    recommended +
-    " W or more. A qualified professional must assess battery and inverter requirements.";
-}
- 
-const resources = {
-  study: {
-    name: "Study Skills Guide",
-    content: "VUMOREN CONNECT - STUDY SKILLS GUIDE\n\n1. Set clear learning goals.\n2. Create a realistic study timetable.\n3. Read and take short notes.\n4. Practise questions regularly.\n5. Review difficult topics.\n6. Ask teachers or mentors for help.\n7. Take breaks and get enough rest."
-  },
-  safety: {
-    name: "Basic Electrical Safety",
-    content: "VUMOREN CONNECT - BASIC ELECTRICAL SAFETY\n\n1. Never touch exposed electrical wires.\n2. Switch off power before authorised inspection.\n3. Keep electrical equipment away from water.\n4. Do not overload sockets.\n5. Use correctly rated cables and protective devices.\n6. Keep children away from electrical installations.\n7. Only qualified persons should carry out electrical installation and repair work."
-  },
-  teacher: {
-    name: "Teacher Lesson Checklist",
-    content: "VUMOREN CONNECT - TEACHER LESSON CHECKLIST\n\nBefore the lesson:\n1. Identify the learning objectives.\n2. Prepare teaching materials.\n3. Check practical equipment for safety.\n\nDuring the lesson:\n4. Explain concepts clearly.\n5. Encourage questions and participation.\n6. Demonstrate practical activities safely.\n\nAfter the lesson:\n7. Assess learners' understanding.\n8. Give feedback and plan follow-up activities."
-  }
-};
-
-function downloadResource(key) {
-  const item = resources[key];
-  if (!item) return;
-
-  const file = new Blob([item.content], { type: "text/plain;charset=utf-8" });
-  const url = URL.createObjectURL(file);
-  const link = document.createElement("a");
-
-  link.href = url;
-  link.download = item.name.replaceAll(" ", "-") + ".txt";
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-
-  setTimeout(() => URL.revokeObjectURL(url), 2000);
-}
-
-function checkPractice() {
-  const select = document.querySelector("#training select");
-  if (!select) return;
-
-  let feedback = document.querySelector("#practiceFeedback");
-
-  if (!feedback) {
-    feedback = document.createElement("p");
-    feedback.id = "practiceFeedback";
-    select.insertAdjacentElement("afterend", feedback);
-  }
-
-  if (!select.value) {
-    feedback.textContent = "Please select an answer first.";
-  } else if (select.value.toLowerCase() === "inverter") {
-    feedback.textContent = "Correct! An inverter converts DC electricity into AC electricity.";
-  } else {
-    feedback.textContent = "Not quite. The correct answer is an inverter. Try again!";
-  }
-}
-
-function demoSubmit(event) {
-  event.preventDefault();
-
-  let message = document.querySelector("#request .form-message");
-
-  if (!message) {
-    message = document.createElement("p");
-    message.className = "form-message";
-    event.target.appendChild(message);
-  }
-
-  message.textContent =
-    "Thank you. This is a demonstration form: your request has not been sent or saved. Contact details and a secure request service will be added in a future version.";
-}
-</script>
-</body>
-</html>
