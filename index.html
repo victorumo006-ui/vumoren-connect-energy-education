@@ -255,6 +255,54 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
 </section>
 
 
+<section class="section" id="admin">
+  <div class="heading">
+    <h2>Administrator Dashboard</h2>
+    <p>Secure management of service requests, customer enquiries and technician applications.</p>
+  </div>
+
+  <div class="card">
+    <h3>Administrator Login</h3>
+    <p>Only authorised VUMOREN CONNECT administrators can access customer records.</p>
+
+    <form id="vumorenAdminLogin" onsubmit="loginVumorenAdmin(event)">
+      <label for="adminEmail">Administrator email</label>
+      <input id="adminEmail" type="email" required autocomplete="username" placeholder="Enter admin email">
+
+      <label for="adminPassword">Password</label>
+      <input id="adminPassword" type="password" required autocomplete="current-password" placeholder="Enter password">
+
+      <button type="submit">Secure Login</button>
+    </form>
+    <p id="adminLoginMessage" role="status" aria-live="polite"></p>
+  </div>
+
+  <div id="vumorenAdminDashboard" class="card" hidden>
+    <h3>Management Centre</h3>
+    <p id="adminWelcome">Administrator access verified.</p>
+
+    <button type="button" onclick="loadVumorenAdminData()">Refresh Records</button>
+    <button type="button" onclick="logoutVumorenAdmin()">Sign Out</button>
+
+    <p id="adminDashboardMessage" role="status" aria-live="polite"></p>
+
+    <div class="admin-record-group">
+      <h3>Service Requests</h3>
+      <div id="adminServiceRequests"></div>
+    </div>
+
+    <div class="admin-record-group">
+      <h3>Customer Enquiries</h3>
+      <div id="adminEnquiries"></div>
+    </div>
+
+    <div class="admin-record-group">
+      <h3>Technician Applications</h3>
+      <div id="adminProviderApplications"></div>
+    </div>
+  </div>
+</section>
+ 
 <section class="section" id="faq">
  <div class="heading"><div class="eyebrow" style="color:#1d6652">Helpful information</div><h2>Frequently asked questions</h2></div>
  <details><summary>Is the solar assessment a final system design?</summary><p>No. It is an educational estimate based on the figures entered. A qualified professional must inspect the site and confirm the design, equipment ratings and safety requirements.</p></details>
