@@ -47,7 +47,8 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
  <div class="brand">VUMOREN <span>CONNECT</span></div>
  <nav aria-label="Main navigation">
   <a href="#energy">Solar tools</a><a href="#services">Services</a><a href="#efficiency">Save energy</a>
-  <a href="#education">Learning</a><a href="#training">Training</a><a href="#request">Enquiries</a><a href="#about">About</a>
+  <a href="#education">Learning</a><a href="#training">Training</a><a href="#request">Request support</a>
+<a href="#tracking">Track request</a><a href="#about">About</a>
  </nav>
 </header>
 
@@ -164,26 +165,95 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
 </section>
 
 <section class="section" id="request">
- <div class="heading"><div class="eyebrow" style="color:#1d6652">Community and provider support</div><h2>Send an enquiry or register interest</h2><p>Choose the type of support you are interested in and provide a short description.</p></div>
+ <div class="heading">
+  <div class="eyebrow" style="color:#1d6652">Secure service connection</div>
+  <h2>Request support or apply as a provider</h2>
+  <p>Submit a service request, general enquiry or technician application.</p>
+ </div>
  <div class="card">
-  <form id="enquiryForm" onsubmit="demoSubmit(event)">
+  <form id="enquiryForm" onsubmit="submitVumorenForm(event)">
    <div class="form-grid">
-    <div><label for="name">Name</label><input id="name" required maxlength="80" placeholder="Your name"></div>
-    <div><label for="community">Community / town</label><input id="community" required maxlength="100" placeholder="Your community"></div>
+    <div><label for="name">Full name</label><input id="name" required maxlength="80"></div>
+    <div><label for="phone">Phone number</label><input id="phone" required maxlength="25"></div>
    </div>
-   <label for="requestType">Type of enquiry</label>
-   <select id="requestType" required>
-    <option>Solar energy assessment</option><option>Solar installation request</option><option>Connect with a solar technician</option>
-    <option>Solar system maintenance</option><option>Technician / service provider registration interest</option>
-    <option>Energy-saving information</option><option>Vocational training information</option><option>Learning resources</option><option>Teacher support</option>
+   <label for="email">Email address (optional)</label>
+   <input id="email" type="email" maxlength="150">
+
+   <label for="requestType">Type of request</label>
+   <select id="requestType" required onchange="toggleProviderFields()">
+    <optgroup label="Customer services">
+     <option value="service:Solar energy assessment">Solar energy assessment</option>
+     <option value="service:Solar installation request">Solar installation request</option>
+     <option value="service:Solar system maintenance">Solar system maintenance</option>
+     <option value="service:Connect with a solar technician">Connect with a solar technician</option>
+    </optgroup>
+    <optgroup label="General enquiries">
+     <option value="enquiry:Energy-saving information">Energy-saving information</option>
+     <option value="enquiry:Vocational training information">Vocational training information</option>
+     <option value="enquiry:Learning resources">Learning resources</option>
+     <option value="enquiry:Teacher support">Teacher support</option>
+     <option value="enquiry:Other enquiry">Other enquiry</option>
+    </optgroup>
+    <optgroup label="Professional registration">
+     <option value="provider:Technician / service provider application">Technician / service provider application</option>
+    </optgroup>
    </select>
-   <label for="message">Describe your needs</label><textarea id="message" rows="4" maxlength="1200" placeholder="Briefly describe the support you need"></textarea>
-   <button class="btn" style="background:var(--g);color:white" type="submit">Submit demo enquiry</button>
-   <p class="small">Demonstration only: this form does not transmit or save your information. Do not enter passwords, bank details or sensitive personal information.</p>
-   <div class="output" id="formmessage" aria-live="polite">Your demonstration confirmation will appear here.</div>
+
+   <div id="communityField">
+    <label for="community">Community / service location</label>
+    <input id="community" maxlength="150">
+   </div>
+
+   <div id="providerFields" class="hidden">
+    <div class="note">Provider applications require administrator review. Submission does not mean approval or verification.</div>
+    <label for="skills">Skills and services offered</label>
+    <textarea id="skills" rows="2" maxlength="300"></textarea>
+    <label for="experience">Years of experience</label>
+    <input id="experience" type="number" min="0" max="60" value="0">
+    <label for="serviceArea">Service area</label>
+    <input id="serviceArea" maxlength="150">
+    <label for="qualifications">Qualifications or training</label>
+    <textarea id="qualifications" rows="2" maxlength="1000"></textarea>
+    <label for="workSummary">Work experience summary</label>
+    <textarea id="workSummary" rows="3" maxlength="1200"></textarea>
+   </div>
+
+   <div id="messageField">
+    <label for="message">Describe your needs</label>
+    <textarea id="message" rows="4" maxlength="1500"></textarea>
+   </div>
+
+   <button class="btn" style="background:var(--g);color:white" type="submit" id="submitRequestBtn">Submit securely</button>
+   <p class="small">Your information will be sent to VUMOREN CONNECT. Never enter passwords or bank details. Keep your tracking code private.</p>
+   <div class="output" id="formmessage" aria-live="polite">Complete the form to continue.</div>
   </form>
  </div>
 </section>
+
+<section class="section" id="tracking">
+ <div class="heading">
+  <div class="eyebrow" style="color:#1d6652">Private tracking</div>
+  <h2>Track your submission</h2>
+  <p>Enter the reference number and private tracking code you received.</p>
+ </div>
+ <div class="card">
+  <form id="trackingForm" onsubmit="trackVumorenSubmission(event)">
+   <label for="trackingType">Submission type</label>
+   <select id="trackingType">
+    <option value="service_request">Customer service request</option>
+    <option value="enquiry">General enquiry</option>
+    <option value="provider_application">Provider application</option>
+   </select>
+   <label for="trackingCode">Reference number</label>
+   <input id="trackingCode" required maxlength="60">
+   <label for="trackingToken">Private tracking code</label>
+   <input id="trackingToken" required maxlength="100">
+   <button class="btn" style="background:var(--g);color:white" type="submit" id="trackBtn">Check status</button>
+   <div class="output" id="trackingResult" aria-live="polite">Your status will appear here.</div>
+  </form>
+ </div>
+</section>
+
 
 <section class="section" id="faq">
  <div class="heading"><div class="eyebrow" style="color:#1d6652">Helpful information</div><h2>Frequently asked questions</h2></div>
@@ -327,13 +397,180 @@ function checkQuiz() {
  feedback.forEach(line => { const p = document.createElement("p"); p.textContent = line; box.appendChild(p); });
 }
 
-function demoSubmit(event) {
- event.preventDefault();
- const name = document.getElementById("name").value.trim();
- const type = document.getElementById("requestType").value;
- const box = document.getElementById("formmessage");
- box.textContent = "Thank you, " + name + ". Your " + type.toLowerCase() + " enquiry has been demonstrated successfully. It has NOT been sent or saved. A secure request service will be needed before real submissions can be received.";
+
+const VUMOREN_SUPABASE_URL = "https://xbztkvenkgmszepyuyfa.supabase.co";
+const VUMOREN_SUPABASE_KEY = "sb_publishable_BvEsjb0C-FP_3xDaIuBvPA_GqfY4Vkj";
+
+async function vumorenRPC(functionName, parameters) {
+  const response = await fetch(
+    VUMOREN_SUPABASE_URL + "/rest/v1/rpc/" + functionName,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": VUMOREN_SUPABASE_KEY,
+        "Authorization": "Bearer " + VUMOREN_SUPABASE_KEY
+      },
+      body: JSON.stringify(parameters)
+    }
+  );
+
+  const result = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(result.message || result.details || "Submission failed. Please try again.");
+  }
+
+  return Array.isArray(result) ? result[0] : result;
 }
+
+function toggleProviderFields() {
+  const selected = document.getElementById("requestType").value;
+  const isProvider = selected.startsWith("provider:");
+  const isService = selected.startsWith("service:");
+
+  const providerFields = document.getElementById("providerFields");
+  const communityField = document.getElementById("communityField");
+
+  providerFields.style.display = isProvider ? "block" : "none";
+  communityField.style.display = isService ? "block" : "none";
+
+  document.getElementById("skills").required = isProvider;
+  document.getElementById("serviceArea").required = isProvider;
+  document.getElementById("community").required = isService;
+}
+
+function showVumorenMessage(message) {
+  document.getElementById("formmessage").textContent = message;
+}
+
+async function submitVumorenForm(event) {
+  event.preventDefault();
+
+  const button = document.getElementById("submitRequestBtn");
+  const selected = document.getElementById("requestType").value;
+  const parts = selected.split(":");
+  const category = parts[0];
+  const subject = parts.slice(1).join(":");
+
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const email = document.getElementById("email").value.trim();
+
+  button.disabled = true;
+  button.textContent = "Submitting securely...";
+  showVumorenMessage("Connecting securely. Please wait...");
+
+  try {
+    let result;
+
+    if (category === "service") {
+      result = await vumorenRPC("submit_vumoren_service_request", {
+        p_customer_name: name,
+        p_phone: phone,
+        p_email: email,
+        p_service_type: subject,
+        p_location: document.getElementById("community").value.trim(),
+        p_description: document.getElementById("message").value.trim()
+      });
+
+    } else if (category === "enquiry") {
+      result = await vumorenRPC("submit_vumoren_enquiry", {
+        p_customer_name: name,
+        p_phone: phone,
+        p_email: email,
+        p_subject: subject,
+        p_message: document.getElementById("message").value.trim()
+      });
+
+    } else if (category === "provider") {
+      result = await vumorenRPC("submit_vumoren_provider_application", {
+        p_applicant_name: name,
+        p_phone: phone,
+        p_email: email,
+        p_skills: document.getElementById("skills").value.trim(),
+        p_years_experience: Number(document.getElementById("experience").value || 0),
+        p_service_area: document.getElementById("serviceArea").value.trim(),
+        p_qualifications: document.getElementById("qualifications").value.trim(),
+        p_work_summary: document.getElementById("workSummary").value.trim()
+      });
+
+    } else {
+      throw new Error("Please select a valid request type.");
+    }
+
+    if (!result || result.success !== true) {
+      throw new Error(result?.message || "The submission could not be confirmed.");
+    }
+
+    const reference = result.request_code || result.application_code;
+    const trackingToken = result.tracking_token;
+
+    if (!reference || !trackingToken) {
+      throw new Error("Submission received, but the tracking details were not returned. Please contact the administrator.");
+    }
+
+    showVumorenMessage(
+      "SUCCESS! Your submission has been received.\n\n" +
+      "Reference number: " + reference + "\n" +
+      "Private tracking code: " + trackingToken + "\n" +
+      "Status: " + result.status + "\n\n" +
+      "IMPORTANT: Save both codes safely. You will need them to track your submission. Do not share your private tracking code."
+    );
+
+    document.getElementById("enquiryForm").reset();
+    toggleProviderFields();
+
+  } catch (error) {
+    showVumorenMessage("Submission error: " + error.message);
+  } finally {
+    button.disabled = false;
+    button.textContent = "Submit securely";
+  }
+}
+
+async function trackVumorenSubmission(event) {
+  event.preventDefault();
+
+  const button = document.getElementById("trackBtn");
+  const output = document.getElementById("trackingResult");
+
+  button.disabled = true;
+  button.textContent = "Checking...";
+  output.textContent = "Checking your private submission record...";
+
+  try {
+    const result = await vumorenRPC("track_vumoren_submission", {
+      p_submission_type: document.getElementById("trackingType").value,
+      p_request_code: document.getElementById("trackingCode").value.trim(),
+      p_tracking_token: document.getElementById("trackingToken").value.trim()
+    });
+
+    if (!result || result.success !== true) {
+      throw new Error(result?.message || "No matching submission was found.");
+    }
+
+    const date = result.created_at
+      ? new Date(result.created_at).toLocaleString()
+      : "Not available";
+
+    output.textContent =
+      "SUBMISSION FOUND\n\n" +
+      "Reference: " + result.request_code + "\n" +
+      "Type: " + result.type.replaceAll("_", " ") + "\n" +
+      "Current status: " + result.status + "\n" +
+      "Date submitted: " + date;
+
+  } catch (error) {
+    output.textContent = "Tracking error: " + error.message;
+  } finally {
+    button.disabled = false;
+    button.textContent = "Check status";
+  }
+}
+
+toggleProviderFields();
+
 </script>
 </body>
 </html>
