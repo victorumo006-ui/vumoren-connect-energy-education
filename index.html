@@ -1005,14 +1005,18 @@ function exportVumorenAdminCSV() {
 
   link.href = url;
   link.download = "vumoren-connect-management-records.csv";
-  link.click();
+  link.style.display = "none";
 
-  URL.revokeObjectURL(url);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
 
   document.getElementById("adminDashboardMessage").textContent =
-    "Management report exported.";
+    "CSV download requested. Check your Downloads folder.";
 }
-
+ 
 function logoutVumorenAdmin() {
   vumorenAdminAccessToken = null;
 
