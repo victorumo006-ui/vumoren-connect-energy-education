@@ -25,6 +25,13 @@ main{max-width:1120px;margin:auto;padding:28px 5% 60px}.section{padding:28px 0;s
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.grid.two{grid-template-columns:repeat(2,1fr)}
 .card{background:white;border:1px solid var(--line);border-radius:14px;padding:19px;box-shadow:0 5px 18px #163b2a08}
 .card h3{color:var(--g);margin:7px 0}.icon{font-size:26px}
+.profile-card{background:white;border:1px solid var(--line);border-radius:14px;padding:19px;box-shadow:0 5px 18px #163b2a08}
+.profile-card h3{color:var(--g);margin:8px 0}
+.profile-meta{font-size:13px;color:var(--muted);margin:6px 0}
+.profile-photo{width:76px;height:76px;border-radius:50%;object-fit:cover;background:#edf3ed}
+.profile-actions{margin-top:14px}
+.profile-actions a{display:inline-block}
+.admin-profile-form{background:#f3f7f2;border:1px solid var(--line);border-radius:12px;padding:16px;margin:14px 0} 
 .calculator{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 label{display:block;font-weight:bold;font-size:14px;margin:12px 0 5px}
 input,select,textarea{width:100%;padding:11px;border:1px solid #cbd7ce;border-radius:8px;background:white;font:inherit;color:var(--ink)}
@@ -46,7 +53,7 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
 <header>
  <div class="brand">VUMOREN <span>CONNECT</span></div>
  <nav aria-label="Main navigation">
-  <a href="#energy">Solar tools</a><a href="#services">Services</a><a href="#efficiency">Save energy</a>
+  <a href="#energy">Solar tools</a><a href="#services">Services</a><a href="#technicians">Technicians</a><a href="#efficiency">Save energy</a>
   <a href="#education">Learning</a><a href="#training">Training</a><a href="#request">Request support</a>
 <a href="#tracking">Track request</a><a href="#about">About</a><a href="#admin">Admin</a>
  </nav>
@@ -114,13 +121,36 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
  <p>Use the enquiry form to express interest in installation, assessment, maintenance or provider participation.</p></div>
  <div class="grid">
   <article class="card"><div class="icon">📝</div><h3>Installation requests</h3><p>Prepare an enquiry for home, school, shop or small-business solar assessment and installation.</p><a class="btn" style="background:var(--g);color:white" href="#request">Request support</a></article>
-  <article class="card"><div class="icon">🧑🏽‍🔧</div><h3>Technician connections</h3><p>We plan to connect customers with solar technicians and service providers. Providers will need identity, qualification and work-history checks before being listed as verified.</p><span class="status">Provider onboarding planned</span></article>
+ 
+<article class="card">
+  <div class="icon">🧑🏽‍🔧</div>
+  <h3>Company-managed technician network</h3>
+  <p>Explore approved technician profiles, professional experience, skills and qualifications. V. UMOREN MULTI SERVICES LTD manages customer communication, quotations, payments and job assignments.</p>
+  <a class="btn" style="background:var(--g);color:white" href="#technicians">Explore technicians</a>
+</article>
+
   <article class="card"><div class="icon">🛠️</div><h3>Maintenance support</h3><p>Describe a system concern so that a qualified professional can advise on next steps.</p><a class="btn" style="background:var(--g);color:white" href="#request">Request maintenance</a></article>
  </div>
  <div class="card" style="margin-top:16px"><h3>For solar technicians and service providers</h3><p>Interested professionals can register their interest for a future provider directory. Submitting this demonstration form does not publish or verify a provider profile.</p><a class="btn" style="background:var(--g);color:white" href="#request" onclick="document.getElementById('requestType').value='Technician / service provider registration interest'">Register interest</a></div>
 </section>
 
-<section class="section" id="efficiency">
+<section class="section" id="technicians">
+  <div class="heading">
+    <div class="eyebrow" style="color:#1d6652">Professional network</div>
+    <h2>Approved Technician Directory</h2>
+    <p>Explore the experience, skills and qualifications of technicians in our professional network.</p>
+  </div>
+
+  <div class="note">
+    <strong>Our company-managed service model:</strong>
+    Customers contact V. UMOREN MULTI SERVICES LTD directly. Our company handles enquiries, quotations, customer payments and technician assignments. Customers do not hire or pay technicians directly.
+  </div>
+
+  <p id="technicianDirectoryMessage" class="small" role="status" aria-live="polite">Loading approved technician profiles...</p>
+  <div class="grid" id="publicTechnicianDirectory"></div>
+</section>
+ 
+ <section class="section" id="efficiency">
  <div class="heading"><div class="eyebrow" style="color:#1d6652">Practical energy information</div><h2>Use electricity more efficiently</h2><p>Simple habits can reduce avoidable energy use and help households and businesses plan their electricity needs.</p></div>
  <div class="grid">
   <article class="card"><div class="icon">💡</div><h3>Lighting</h3><p>Use efficient LED lamps, switch off lights in unused spaces and make use of daylight where practical.</p></article>
@@ -277,6 +307,73 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
     <p id="adminLoginMessage" role="status" aria-live="polite"></p>
   </div>
 
+<div class="admin-profile-form">
+  <h3>Professional Technician Profile Manager</h3>
+  <p>Create and manage public profiles for approved technicians. Never publish a profile without the technician's consent.</p>
+
+  <form id="technicianProfileForm" onsubmit="saveTechnicianProfile(event)">
+    <label for="profileApplication">Link to technician application (optional)</label>
+    <select id="profileApplication">
+      <option value="">No linked application</option>
+    </select>
+
+    <label for="profileName">Public display name</label>
+    <input id="profileName" required maxlength="100">
+
+    <label for="profileTitle">Professional title</label>
+    <input id="profileTitle" placeholder="e.g. Solar Installation Technician">
+
+    <label for="profileSkills">Professional skills</label>
+    <textarea id="profileSkills" required rows="2"></textarea>
+
+    <label for="profileExperience">Years of experience</label>
+    <input id="profileExperience" type="number" min="0" max="60" value="0" required>
+
+    <label for="profileCredentials">Credentials review status</label>
+    <select id="profileCredentials">
+      <option>Company reviewed</option>
+      <option>Credentials checked</option>
+      <option>Independently verified</option>
+    </select>
+
+    <label for="profileQualifications">Qualifications summary</label>
+    <textarea id="profileQualifications" rows="2"></textarea>
+
+    <label for="profileAreas">General service areas</label>
+    <input id="profileAreas">
+
+    <label for="profileSummary">Professional profile summary</label>
+    <textarea id="profileSummary" rows="3"></textarea>
+
+    <label for="profilePortfolio">Work portfolio summary</label>
+    <textarea id="profilePortfolio" rows="3"></textarea>
+
+    <label for="profilePortfolioUrl">Portfolio link (optional)</label>
+    <input id="profilePortfolioUrl" type="url">
+
+    <label for="profilePhoto">Photo link (optional)</label>
+    <input id="profilePhoto" type="url">
+
+    <label for="profileStatus">Profile status</label>
+    <select id="profileStatus">
+      <option value="draft">Draft – not public</option>
+      <option value="published">Published</option>
+      <option value="archived">Archived</option>
+    </select>
+
+    <label>
+      <input type="checkbox" id="profileConsent" style="width:auto">
+      Technician has expressly consented to public profile publication.
+    </label>
+
+    <button class="btn primary" type="submit">Save Technician Profile</button>
+    <button class="btn" type="button" onclick="resetTechnicianProfileForm()">Clear Form</button>
+  </form>
+
+  <h3>Existing Public Technician Profiles</h3>
+  <div id="adminTechnicianProfiles">Profiles will appear here after administrator login.</div>
+</div>
+ 
 <div id="vumorenAdminDashboard" class="card" hidden>
   <h3>VUMOREN CONNECT Management Centre</h3>
   <p id="adminWelcome">Administrator access verified.</p>
@@ -783,9 +880,270 @@ async function loginVumorenAdmin(event) {
 const vumorenAdminRecords = {
   service_requests: [],
   enquiries: [],
-  provider_applications: []
+  provider_applications: [],
+  public_technician_profiles: []
 };
 
+async function loadPublicTechnicianDirectory() {
+  const message = document.getElementById("technicianDirectoryMessage");
+  const container = document.getElementById("publicTechnicianDirectory");
+
+  try {
+    const response = await fetch(
+      VUMOREN_SUPABASE_URL +
+      "/rest/v1/public_technician_profiles?select=id,display_name,professional_title,skills,years_experience,qualifications_summary,service_areas,profile_summary,portfolio_summary,portfolio_url,photo_url,credentials_label&profile_status=eq.published&consent_to_publish=eq.true&order=created_at.desc",
+      { headers: { "apikey": VUMOREN_SUPABASE_KEY } }
+    );
+
+    if (!response.ok) throw new Error("Directory could not be loaded.");
+
+    const profiles = await response.json();
+    container.replaceChildren();
+
+    if (!profiles.length) {
+      message.textContent = "No technician profiles have been published yet. Please check again later.";
+      return;
+    }
+
+    profiles.forEach(profile => {
+      const card = document.createElement("article");
+      card.className = "profile-card";
+
+      if (profile.photo_url) {
+        const photo = document.createElement("img");
+        photo.className = "profile-photo";
+        photo.src = profile.photo_url;
+        photo.alt = "Technician profile photo";
+        photo.loading = "lazy";
+        photo.onerror = () => photo.remove();
+        card.appendChild(photo);
+      }
+
+      const heading = document.createElement("h3");
+      heading.textContent = profile.display_name;
+      card.appendChild(heading);
+
+      const addText = (value, className = "profile-meta") => {
+        if (!value) return;
+        const p = document.createElement("p");
+        p.className = className;
+        p.textContent = value;
+        card.appendChild(p);
+      };
+
+      addText(profile.professional_title);
+      addText("Experience: " + profile.years_experience + " years");
+      addText("Skills: " + profile.skills);
+      addText("Qualifications: " + (profile.qualifications_summary || "Not provided"));
+      addText("Service areas: " + (profile.service_areas || "Contact our company"));
+      addText(profile.profile_summary);
+      addText("Portfolio: " + (profile.portfolio_summary || "Available on request"));
+      addText("Review status: " + profile.credentials_label);
+
+      if (profile.portfolio_url) {
+        try {
+          const url = new URL(profile.portfolio_url);
+          if (url.protocol === "https:" || url.protocol === "http:") {
+            const link = document.createElement("a");
+            link.href = url.href;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = "View portfolio";
+            card.appendChild(link);
+          }
+        } catch (_) {}
+      }
+
+      const actions = document.createElement("div");
+      actions.className = "profile-actions";
+
+      const button = document.createElement("a");
+      button.className = "btn";
+      button.href = "#request";
+      button.textContent = "Request this service";
+      button.style.background = "var(--g)";
+      button.style.color = "white";
+      actions.appendChild(button);
+      card.appendChild(actions);
+
+      container.appendChild(card);
+    });
+
+    message.textContent = profiles.length + " approved technician profile(s) available.";
+  } catch (error) {
+    message.textContent = "Technician directory is temporarily unavailable.";
+  }
+}
+
+function populateProfileApplicationOptions() {
+  const select = document.getElementById("profileApplication");
+  select.replaceChildren();
+
+  const empty = document.createElement("option");
+  empty.value = "";
+  empty.textContent = "No linked application";
+  select.appendChild(empty);
+
+  vumorenAdminRecords.provider_applications
+    .filter(app => app.status === "approved")
+    .forEach(app => {
+      const option = document.createElement("option");
+      option.value = app.id;
+      option.textContent = app.application_code + " — " + app.applicant_name;
+      select.appendChild(option);
+    });
+}
+
+function resetTechnicianProfileForm() {
+  document.getElementById("technicianProfileForm").reset();
+  document.getElementById("profileExperience").value = 0;
+  document.getElementById("profileStatus").value = "draft";
+  document.getElementById("technicianProfileForm").dataset.profileId = "";
+}
+
+function renderAdminTechnicianProfiles() {
+  const container = document.getElementById("adminTechnicianProfiles");
+  container.replaceChildren();
+
+  if (!vumorenAdminRecords.public_technician_profiles.length) {
+    container.textContent = "No technician profiles created yet.";
+    return;
+  }
+
+  vumorenAdminRecords.public_technician_profiles.forEach(profile => {
+    const card = document.createElement("article");
+    card.className = "card";
+    card.style.margin = "12px 0";
+
+    const heading = document.createElement("h4");
+    heading.textContent = profile.display_name;
+    card.appendChild(heading);
+
+    const details = document.createElement("p");
+    details.textContent =
+      (profile.professional_title || "Technician") +
+      " | " + profile.years_experience + " years | " +
+      profile.profile_status +
+      " | Consent: " + (profile.consent_to_publish ? "Yes" : "No");
+    card.appendChild(details);
+
+    const edit = document.createElement("button");
+    edit.type = "button";
+    edit.className = "btn";
+    edit.textContent = "Edit profile";
+    edit.addEventListener("click", () => {
+      const fields = {
+        profileApplication: profile.provider_application_id,
+        profileName: profile.display_name,
+        profileTitle: profile.professional_title,
+        profileSkills: profile.skills,
+        profileExperience: profile.years_experience,
+        profileCredentials: profile.credentials_label,
+        profileQualifications: profile.qualifications_summary,
+        profileAreas: profile.service_areas,
+        profileSummary: profile.profile_summary,
+        profilePortfolio: profile.portfolio_summary,
+        profilePortfolioUrl: profile.portfolio_url,
+        profilePhoto: profile.photo_url,
+        profileStatus: profile.profile_status,
+        profileConsent: profile.consent_to_publish
+      };
+
+      Object.entries(fields).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element.type === "checkbox") {
+          element.checked = Boolean(value);
+        } else {
+          element.value = value ?? "";
+        }
+      });
+
+      document.getElementById("technicianProfileForm").dataset.profileId = profile.id;
+      document.getElementById("technicianProfileForm").scrollIntoView({ behavior: "smooth" });
+    });
+
+    card.appendChild(edit);
+    container.appendChild(card);
+  });
+}
+
+async function saveTechnicianProfile(event) {
+  event.preventDefault();
+
+  if (!vumorenAdminAccessToken) {
+    alert("Please log in as an administrator.");
+    return;
+  }
+
+  const status = document.getElementById("profileStatus").value;
+  const consent = document.getElementById("profileConsent").checked;
+
+  if (status === "published" && !consent) {
+    alert("Publication requires the technician's express consent.");
+    return;
+  }
+
+  const experience = Number(document.getElementById("profileExperience").value);
+
+  if (!Number.isInteger(experience) || experience < 0 || experience > 60) {
+    alert("Enter a valid number of years of experience.");
+    return;
+  }
+
+  const form = document.getElementById("technicianProfileForm");
+  const profileId = form.dataset.profileId;
+
+  const payload = {
+    provider_application_id: document.getElementById("profileApplication").value || null,
+    display_name: document.getElementById("profileName").value.trim(),
+    professional_title: document.getElementById("profileTitle").value.trim() || null,
+    skills: document.getElementById("profileSkills").value.trim(),
+    years_experience: experience,
+    credentials_label: document.getElementById("profileCredentials").value,
+    qualifications_summary: document.getElementById("profileQualifications").value.trim() || null,
+    service_areas: document.getElementById("profileAreas").value.trim() || null,
+    profile_summary: document.getElementById("profileSummary").value.trim() || null,
+    portfolio_summary: document.getElementById("profilePortfolio").value.trim() || null,
+    portfolio_url: document.getElementById("profilePortfolioUrl").value.trim() || null,
+    photo_url: document.getElementById("profilePhoto").value.trim() || null,
+    profile_status: status,
+    consent_to_publish: consent
+  };
+
+  const button = form.querySelector('button[type="submit"]');
+  button.disabled = true;
+  button.textContent = "Saving profile...";
+
+  try {
+    const path = profileId
+      ? "/rest/v1/public_technician_profiles?id=eq." + encodeURIComponent(profileId)
+      : "/rest/v1/public_technician_profiles";
+
+    await vumorenAdminRequest(path, {
+      method: profileId ? "PATCH" : "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Prefer": "return=representation"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    document.getElementById("adminDashboardMessage").textContent =
+      "Technician profile saved successfully.";
+
+    await loadVumorenAdminData();
+    await loadPublicTechnicianDirectory();
+    resetTechnicianProfileForm();
+
+  } catch (error) {
+    document.getElementById("adminDashboardMessage").textContent =
+      "Profile save failed: " + error.message;
+  } finally {
+    button.disabled = false;
+    button.textContent = "Save Technician Profile";
+  }
+ }
+ 
 async function loadVumorenAdminData() {
   if (!vumorenAdminAccessToken) return;
 
@@ -808,6 +1166,14 @@ async function loadVumorenAdminData() {
       );
     }
 
+    vumorenAdminRecords.public_technician_profiles =
+      await vumorenAdminRequest(
+        "/rest/v1/public_technician_profiles?select=*&order=created_at.desc"
+      );
+
+    populateProfileApplicationOptions();
+    renderAdminTechnicianProfiles();
+ 
     document.getElementById("countServiceRequests").textContent =
       vumorenAdminRecords.service_requests.length;
 
@@ -1039,7 +1405,7 @@ function logoutVumorenAdmin() {
  }
                                       
  toggleProviderFields();
-
+loadPublicTechnicianDirectory();
 </script>
 </body>
 </html>
