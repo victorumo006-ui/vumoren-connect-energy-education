@@ -330,7 +330,11 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
     <input id="profileExperience" type="number" min="0" max="60" value="0" required>
 
     <label for="profileCredentials">Credentials review status</label>
-    <select id="profileCredentials">
+   <p class="small">
+  Select the strongest review status supported by actual evidence.
+  Use "Independently verified" only where independent verification has been completed and documented.
+   </p> 
+   <select id="profileCredentials">
       <option>Company reviewed</option>
       <option>Credentials checked</option>
       <option>Independently verified</option>
@@ -961,6 +965,21 @@ async function loadPublicTechnicianDirectory() {
       button.className = "btn";
       button.href = "#request";
       button.textContent = "Request this service";
+     button.addEventListener("click", () => {
+  document.getElementById("requestType").value =
+    "service:Connect with a solar technician";
+  toggleProviderFields();
+});
+     button.addEventListener("click", () => {
+  const requestType = document.getElementById("requestType");
+  requestType.value = "service:Connect with a solar technician";
+  toggleProviderFields();
+});
+     button.addEventListener("click", () => {
+  const requestType = document.getElementById("requestType");
+  requestType.value = "service:Connect with a solar technician";
+  toggleProviderFields();
+});
       button.style.background = "var(--g)";
       button.style.color = "white";
       actions.appendChild(button);
