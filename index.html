@@ -966,16 +966,6 @@ async function loadPublicTechnicianDirectory() {
       button.href = "#request";
       button.textContent = "Request this service";
      button.addEventListener("click", () => {
-  document.getElementById("requestType").value =
-    "service:Connect with a solar technician";
-  toggleProviderFields();
-});
-     button.addEventListener("click", () => {
-  const requestType = document.getElementById("requestType");
-  requestType.value = "service:Connect with a solar technician";
-  toggleProviderFields();
-});
-     button.addEventListener("click", () => {
   const requestType = document.getElementById("requestType");
   requestType.value = "service:Connect with a solar technician";
   toggleProviderFields();
