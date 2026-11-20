@@ -117,8 +117,11 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
 </section>
 
 <section class="section" id="services">
- <div class="heading"><div class="eyebrow" style="color:#1d6652">Pillar 02 · Solar services</div><h2>Energy services and support</h2>
- <p>Use the enquiry form to express interest in installation, assessment, maintenance or provider participation.</p></div>
+ <div class="heading">
+  <div class="eyebrow" style="color:#1d6652">Pillar 02 · Technical and business services</div>
+  <h2>Professional Services, Procurement and Support</h2>
+  <p>V. UMOREN MULTI SERVICES LTD provides coordinated electrical, solar, CCTV, equipment procurement and technical support services for households, schools and businesses. Submit a request and our company will review your needs, prepare a quotation and coordinate service delivery.</p>
+ </div>
  
 <div class="grid">
   <article class="card">
@@ -163,7 +166,11 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
     <a class="btn" style="background:var(--g);color:white" href="#request">Request support</a>
   </article>
 </div>
- <div class="card" style="margin-top:16px"><h3>For solar technicians and service providers</h3><p>Interested professionals can register their interest for a future provider directory. Submitting this demonstration form does not publish or verify a provider profile.</p><a class="btn" style="background:var(--g);color:white" href="#request" onclick="document.getElementById('requestType').value='Technician / service provider registration interest'">Register interest</a></div>
+ <div class="card" style="margin-top:16px">
+  <h3>Join Our Professional Technician Network</h3>
+  <p>Electrical, solar, CCTV and other qualified service providers can apply to join our company-managed network. Applications are reviewed by V. UMOREN MULTI SERVICES LTD. Approval and consent are required before a professional profile can be published.</p>
+  <a class="btn" style="background:var(--g);color:white" href="#request" onclick="document.getElementById('requestType').value='provider:Technician / service provider application';toggleProviderFields()">Apply as a service provider</a>
+ </div>
 </section>
 
 <section class="section" id="technicians">
@@ -230,10 +237,14 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
  <div class="heading">
   <div class="eyebrow" style="color:#1d6652">Secure service connection</div>
   <h2>Request support or apply as a provider</h2>
-  <p>Submit a service request, general enquiry or technician application.</p>
+  <p>Submit a service request, general enquiry or technician application. Our company will review your submission and contact you through the details provided.</p>
  </div>
  <div class="card">
   <form id="enquiryForm" onsubmit="submitVumorenForm(event)">
+   <div class="note">
+  <strong>Privacy notice:</strong>
+  Your contact details and submission information are collected to process your request or application. Do not enter passwords, bank details, payment card information or other sensitive personal information in this form.
+   </div>
    <div class="form-grid">
     <div><label for="name">Full name</label><input id="name" required maxlength="80"></div>
     <div><label for="phone">Phone number</label><input id="phone" required maxlength="25"></div>
@@ -305,7 +316,7 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
  <div class="heading">
   <div class="eyebrow" style="color:#1d6652">Private tracking</div>
   <h2>Track your submission</h2>
-  <p>Enter the reference number and private tracking code you received.</p>
+  <p>After submitting a service request, enquiry or technician application, keep your reference number and private tracking code safe. Enter both details below to check the latest recorded status. Do not share your tracking code with anyone.</p><h2>Contact V. UMOREN MULTI SERVICES LTD</h2>
  </div>
  <div class="card">
   <form id="trackingForm" onsubmit="trackVumorenSubmission(event)">
@@ -329,7 +340,7 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
 <section class="section" id="admin">
   <div class="heading">
     <h2>Administrator Dashboard</h2>
-    <p>Secure management of service requests, customer enquiries and technician applications.</p>
+    <p>Contact our company for service requests, quotations, equipment procurement, technician coordination, partnerships and general enquiries. All customer service arrangements are managed through V. UMOREN MULTI SERVICES LTD.</p>
   </div>
 
   <div class="card">
@@ -484,24 +495,123 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
 </div>
  
 </section>
- 
-<section class="section" id="faq">
- <div class="heading"><div class="eyebrow" style="color:#1d6652">Helpful information</div><h2>Frequently asked questions</h2></div>
- <details><summary>Is the solar assessment a final system design?</summary><p>No. It is an educational estimate based on the figures entered. A qualified professional must inspect the site and confirm the design, equipment ratings and safety requirements.</p></details>
- <details><summary>Are the equipment prices live market prices?</summary><p>No. The budget tool adds quotation amounts entered by the user. It does not retrieve supplier prices or guarantee equipment availability.</p></details>
- <details><summary>Can I currently book a technician through this website?</summary><p>Not yet. Technician registration, verification, directory listings and customer matching are planned features. The current form only demonstrates how an enquiry could be collected.</p></details>
- <details><summary>Are the learning resources official examination materials?</summary><p>No. They are introductory resources prepared for general learning. They are not official WAEC or NECO papers or publications.</p></details>
- <details><summary>Can I use the website on a phone?</summary><p>Yes. The page is designed to adapt to mobile screens. Downloadable text resources can be saved for offline reading after download.</p></details>
-</section>
-
-<section class="section" id="about">
- <div class="heading"><div class="eyebrow" style="color:#1d6652">About the initiative</div><h2>Local innovation for digital inclusion</h2>
- <p>VUMOREN CONNECT – Smart Energy & Education is an initiative by V. Umoren Multi Services Ltd. It aims to make practical energy information, service connections and learning support more accessible to underserved communities.</p></div>
- <div class="grid two">
-  <article class="card"><h3>Intended community impact</h3><p>Support better-informed energy decisions, encourage efficient electricity use, improve access to introductory technical learning and create a pathway toward trusted local service connections.</p></article>
-  <article class="card"><h3>Development approach</h3><p>Start with accessible digital tools and learning content, then develop secure request handling, provider verification, partnerships and community feedback processes.</p></article>
+ <section class="section" id="commitment">
+ <div class="heading">
+  <div class="eyebrow" style="color:#1d6652">Our service commitment</div>
+  <h2>How We Work With You</h2>
+  <p>We use a company-managed process designed to make service enquiries, quotations and delivery easier to coordinate.</p>
  </div>
- <div class="note"><strong>Current prototype status:</strong> Solar assessment, quotation-based budget calculation, downloadable learning resources, quiz feedback and demo enquiry confirmation run in the browser. Enquiry processing, technician verification and matching, live pricing, user accounts and structured instructor-led courses are not yet connected or operational.</div>
+
+ <div class="grid two">
+  <article class="card">
+   <div class="icon">📩</div>
+   <h3>1. Submit Your Request</h3>
+   <p>Tell us what you need, your location and the relevant service details through our website.</p>
+  </article>
+
+  <article class="card">
+   <div class="icon">🔎</div>
+   <h3>2. Review and Assessment</h3>
+   <p>Our company reviews your requirements and may contact you for additional information or an assessment.</p>
+  </article>
+
+  <article class="card">
+   <div class="icon">📋</div>
+   <h3>3. Quotation and Coordination</h3>
+   <p>We discuss the proposed scope, pricing, materials, payment arrangements and delivery schedule with you.</p>
+  </article>
+
+  <article class="card">
+   <div class="icon">🛠️</div>
+   <h3>4. Service Delivery and Follow-up</h3>
+   <p>Where an agreement is reached, our company coordinates the assigned professionals and follows up on the service.</p>
+  </article>
+ </div>
+
+ <div class="note">
+  <strong>Our commitment:</strong>
+  We aim to provide clear communication, responsible coordination and professional service. Submitting a request does not automatically constitute a confirmed booking or service agreement.
+ </div>
+ </section>
+<section class="section" id="faq">
+ <div class="heading">
+  <div class="eyebrow" style="color:#1d6652">Helpful information</div>
+  <h2>Frequently asked questions</h2>
+ </div>
+
+ <details>
+  <summary>Can I request electrical, solar or CCTV services?</summary>
+  <p>Yes. You can submit a service request through the website. V. UMOREN MULTI SERVICES LTD will review your requirements and contact you to discuss the next steps.</p>
+ </details>
+
+ <details>
+  <summary>How are technicians selected and assigned?</summary>
+  <p>Our company manages technician applications, profile publication and job assignments. Customers communicate with the company rather than hiring technicians directly.</p>
+ </details>
+
+ <details>
+  <summary>Can customers pay technicians directly?</summary>
+  <p>No. Customer payments for company-managed services are handled by V. UMOREN MULTI SERVICES LTD. Payment arrangements and quotations are communicated by the company.</p>
+ </details>
+
+ <details>
+  <summary>Are equipment prices live market prices?</summary>
+  <p>No. Supplier prices and equipment availability are confirmed during quotation. The website does not currently retrieve live supplier prices.</p>
+ </details>
+
+ <details>
+  <summary>Are technician profiles automatically verified?</summary>
+  <p>No. Profiles are prepared and managed by our company. Any qualifications or credentials are described according to the checks actually completed. Publication requires the technician's consent.</p>
+ </details>
+
+ <details>
+  <summary>Are the learning resources official examination materials?</summary>
+  <p>No. They are introductory learning resources and are not official WAEC or NECO examination papers or publications.</p>
+ </details>
+
+ <details>
+  <summary>Can I track a submitted request?</summary>
+  <p>Yes. Use the reference code and private tracking details provided after submission to check the recorded status.</p>
+ </details>
+
+ <details>
+  <summary>Can I use the website on a phone?</summary>
+  <p>Yes. The website is designed to adapt to mobile screens.</p>
+ </details>
+</section>
+<section class="section" id="about">
+ <div class="heading">
+  <div class="eyebrow" style="color:#1d6652">About our platform</div>
+  <h2>Connecting Services, Skills and Opportunities</h2>
+  <p>VUMOREN CONNECT – Smart Energy & Education is a digital platform developed by V. UMOREN MULTI SERVICES LTD to connect households, businesses, professionals and learners with practical services, procurement opportunities and accessible technical learning.</p>
+ </div>
+
+ <div class="grid two">
+  <article class="card">
+   <h3>Our Mission</h3>
+   <p>To make reliable technical services, equipment procurement, practical learning and professional opportunities more accessible to individuals, businesses and communities.</p>
+  </article>
+
+  <article class="card">
+   <h3>Our Service Model</h3>
+   <p>Our company coordinates customer enquiries, quotations, service delivery, payments and technician assignments. Customers deal directly with the company throughout the service process.</p>
+  </article>
+
+  <article class="card">
+   <h3>Professional Opportunities</h3>
+   <p>Qualified technicians and service providers can apply to join our professional network. Approved and consenting professionals may have public profiles displaying relevant skills and experience.</p>
+  </article>
+
+  <article class="card">
+   <h3>Learning and Community Impact</h3>
+   <p>We aim to support practical electrical, solar and CCTV learning, energy awareness, vocational development and wider access to useful information.</p>
+  </article>
+ </div>
+
+ <div class="note">
+  <strong>Platform development status:</strong>
+  Customer service requests, enquiries, provider applications, private request tracking and administrator record management are connected to the backend. Public technician profiles can be managed by administrators and are displayed only when published with consent. Solar planning tools and introductory learning resources are available on the website. Automated online payments, live supplier pricing, automatic technician matching and customer accounts are not yet operational.
+ </div>
 </section>
 </main>
 <footer><strong>VUMOREN CONNECT – Smart Energy & Education</strong><br>A digital inclusion prototype · V. Umoren Multi Services Ltd<br>Practical energy information and accessible learning support.<br><a href="#faq" style="color:#d8ef9b">FAQs</a> · <a href="#about" style="color:#d8ef9b">About and development status</a></footer>
