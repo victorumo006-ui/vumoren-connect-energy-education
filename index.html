@@ -265,6 +265,108 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
  </div>
 </section>
 
+<section class="section" id="professionalAccount">
+  <div class="heading">
+    <div class="eyebrow" style="color:#1d6652">Professional portal</div>
+    <h2>Technician & Business Account</h2>
+    <p>Register or sign in to manage your professional submissions, certificates, portfolios and product catalogues.</p>
+  </div>
+
+  <div class="card">
+    <h3>Create a professional account</h3>
+    <form id="professionalRegisterForm" onsubmit="registerProfessionalAccount(event)">
+      <label for="professionalAccountType">Account type</label>
+      <select id="professionalAccountType" required>
+        <option value="">Choose account type</option>
+        <option value="technician">Technician / Service Provider</option>
+        <option value="business">Business / Manufacturer</option>
+      </select>
+
+      <label for="professionalDisplayName">Full name</label>
+      <input id="professionalDisplayName" type="text" maxlength="120" required>
+
+      <label for="professionalBusinessName">Business or company name (if applicable)</label>
+      <input id="professionalBusinessName" type="text" maxlength="150">
+
+      <label for="professionalRegisterEmail">Email address</label>
+      <input id="professionalRegisterEmail" type="email" required>
+
+      <label for="professionalRegisterPassword">Create password</label>
+      <input id="professionalRegisterPassword" type="password" minlength="8" required>
+
+      <button type="submit">Create Professional Account</button>
+      <p id="professionalRegisterMessage" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Professional account sign in</h3>
+    <form id="professionalLoginForm" onsubmit="loginProfessionalAccount(event)">
+      <label for="professionalLoginEmail">Email address</label>
+      <input id="professionalLoginEmail" type="email" required>
+
+      <label for="professionalLoginPassword">Password</label>
+      <input id="professionalLoginPassword" type="password" required>
+
+      <button type="submit">Sign In</button>
+      <p id="professionalLoginMessage" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+
+  <div class="card" id="professionalDashboard" hidden>
+    <h3>My Professional Dashboard</h3>
+    <p id="professionalWelcome"></p>
+    <p id="professionalAccountStatus"></p>
+    <p id="professionalDashboardMessage" role="status" aria-live="polite"></p>
+   
+<div id="professionalUploadPanel" hidden>
+  <h3>Submit Professional Documents</h3>
+  <p>Upload certificates, project evidence, product photographs or catalogues for company review.</p>
+
+  <form id="professionalUploadForm" onsubmit="submitProfessionalFile(event)">
+    <label for="professionalFileCategory">Document category</label>
+    <select id="professionalFileCategory" required>
+      <option value="">Choose category</option>
+      <option value="technician_portfolio">Technician portfolio</option>
+      <option value="technician_certificate">Certificate or qualification</option>
+      <option value="project_photo">Project photograph</option>
+      <option value="project_video">Project video</option>
+      <option value="business_product_image">Business product photograph</option>
+      <option value="business_catalogue">Business brochure or catalogue</option>
+      <option value="other">Other supporting document</option>
+    </select>
+
+    <label for="professionalUploadFile">Choose file</label>
+    <input
+      id="professionalUploadFile"
+      type="file"
+      accept=".jpg,.jpeg,.png,.pdf,.mp4,.webm"
+      required
+    >
+
+    <label for="professionalFileDescription">Description</label>
+    <textarea
+      id="professionalFileDescription"
+      rows="3"
+      maxlength="1000"
+      placeholder="Describe this certificate, project or product"
+      required
+    ></textarea>
+
+    <label>
+      <input id="professionalFileConsent" type="checkbox" required>
+      I confirm that I have permission to submit this material and consent to its publication if approved by the company.
+    </label>
+
+    <button type="submit">Submit for Company Review</button>
+    <p id="professionalUploadMessage" role="status" aria-live="polite"></p>
+  </form>
+</div>
+
+    <button type="button" onclick="logoutProfessionalAccount()">Sign Out</button>
+  </div>
+</section>
+
 <section class="section" id="request">
  <div class="heading">
   <div class="eyebrow" style="color:#1d6652">Secure service connection</div>
@@ -1346,6 +1448,161 @@ async function vumorenAdminRequest(path, options = {}) {
   }
 
   return data;
+}
+
+let professionalAccessToken = null;
+
+async function professionalRequest(path, options = {}) {
+  const response = await fetch(VUMOREN_SUPABASE_URL + path, {
+    ...options,
+    headers: {
+      "apikey": VUMOREN_SUPABASE_KEY,
+      "Authorization": "Bearer " + professionalAccessToken,
+      ...(options.headers || {})
+    }
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(data.message || data.details || "Professional account request failed.");
+  }
+
+  return data;
+}
+
+async function registerProfessionalAccount(event) {
+  event.preventDefault();
+
+  const message = document.getElementById("professionalRegisterMessage");
+  message.textContent = "Creating your professional account...";
+
+  const accountType = document.getElementById("professionalAccountType").value;
+  const displayName = document.getElementById("professionalDisplayName").value.trim();
+  const businessName = document.getElementById("professionalBusinessName").value.trim();
+  const email = document.getElementById("professionalRegisterEmail").value.trim();
+  const password = document.getElementById("professionalRegisterPassword").value;
+
+  try {
+    if (!["technician", "business"].includes(accountType)) {
+      throw new Error("Please select a valid account type.");
+    }
+
+    if (accountType === "business" && !businessName) {
+      throw new Error("Please enter your business or company name.");
+    }
+
+    const response = await fetch(
+      VUMOREN_SUPABASE_URL + "/auth/v1/signup",
+      {
+        method: "POST",
+        headers: {
+          "apikey": VUMOREN_SUPABASE_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          data: {
+            account_type: accountType,
+            display_name: displayName,
+            business_name: businessName || null
+          }
+        })
+      }
+    );
+
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(result.msg || result.message || result.error_description || "Registration failed.");
+    }
+
+    document.getElementById("professionalRegisterForm").reset();
+
+    message.textContent = result.session
+      ? "Registration successful. Please sign in to access your professional dashboard."
+      : "Registration submitted. Check your email for confirmation, then sign in.";
+
+  } catch (error) {
+    message.textContent = error.message;
+  }
+}
+
+async function loginProfessionalAccount(event) {
+  event.preventDefault();
+
+  const message = document.getElementById("professionalLoginMessage");
+  const dashboard = document.getElementById("professionalDashboard");
+
+  professionalAccessToken = null;
+  dashboard.hidden = true;
+  message.textContent = "Verifying professional account...";
+
+  try {
+    const response = await fetch(
+      VUMOREN_SUPABASE_URL + "/auth/v1/token?grant_type=password",
+      {
+        method: "POST",
+        headers: {
+          "apikey": VUMOREN_SUPABASE_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: document.getElementById("professionalLoginEmail").value.trim(),
+          password: document.getElementById("professionalLoginPassword").value
+        })
+      }
+    );
+
+    const session = await response.json().catch(() => ({}));
+
+    if (!response.ok || !session.access_token) {
+      throw new Error(session.msg || session.message || "Sign in failed. Check your email confirmation and password.");
+    }
+
+    professionalAccessToken = session.access_token;
+
+    const accounts = await professionalRequest(
+      "/rest/v1/professional_accounts?select=user_id,account_type,display_name,business_name,account_status&user_id=eq." +
+      encodeURIComponent(session.user.id)
+    );
+
+    if (!Array.isArray(accounts) || accounts.length !== 1) {
+      throw new Error("No professional account was found for this login.");
+    }
+
+    const account = accounts[0];
+
+    document.getElementById("professionalWelcome").textContent =
+      "Welcome, " + account.display_name + " (" + account.account_type + ").";
+
+    document.getElementById("professionalAccountStatus").textContent =
+      "Account status: " + account.account_status.toUpperCase();
+
+    document.getElementById("professionalDashboardMessage").textContent =
+      account.account_status === "approved"
+        ? "Your professional account is approved."
+        : account.account_status === "pending"
+          ? "Your account is awaiting company approval. You cannot publish professional materials yet."
+          : "Your account is suspended. Please contact V. UMOREN MULTI SERVICES LTD.";
+
+    dashboard.hidden = false;
+    document.getElementById("professionalLoginForm").reset();
+    message.textContent = "Professional account verified successfully.";
+
+  } catch (error) {
+    professionalAccessToken = null;
+    dashboard.hidden = true;
+    message.textContent = error.message;
+  }
+}
+
+function logoutProfessionalAccount() {
+  professionalAccessToken = null;
+  document.getElementById("professionalDashboard").hidden = true;
+  document.getElementById("professionalLoginMessage").textContent =
+    "You have signed out.";
 }
 
 async function loginVumorenAdmin(event) {
