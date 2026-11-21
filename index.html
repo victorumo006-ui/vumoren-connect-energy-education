@@ -487,6 +487,73 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
 
   <p id="adminDashboardMessage" role="status" aria-live="polite"></p>
 
+<div class="admin-profile-form">
+  <h3>Professional Technician Profile Manager</h3>
+  <p>Create and manage public profiles for approved technicians. Never publish a profile without the technician's consent.</p>
+
+  <form id="technicianProfileForm" onsubmit="saveTechnicianProfile(event)">
+    <label for="profileApplication">Link to technician application (optional)</label>
+    <select id="profileApplication">
+      <option value="">No linked application</option>
+    </select>
+
+    <label for="profileName">Public display name</label>
+    <input id="profileName" required maxlength="100">
+
+    <label for="profileTitle">Professional title</label>
+    <input id="profileTitle" placeholder="e.g. Solar Installation Technician">
+
+    <label for="profileSkills">Professional skills</label>
+    <textarea id="profileSkills" required rows="2"></textarea>
+
+    <label for="profileExperience">Years of experience</label>
+    <input id="profileExperience" type="number" min="0" max="60" value="0" required>
+
+    <label for="profileCredentials">Credentials review status</label>
+    <select id="profileCredentials">
+      <option>Company reviewed</option>
+      <option>Credentials checked</option>
+      <option>Independently verified</option>
+    </select>
+
+    <label for="profileQualifications">Qualifications summary</label>
+    <textarea id="profileQualifications" rows="2"></textarea>
+
+    <label for="profileAreas">General service areas</label>
+    <input id="profileAreas">
+
+    <label for="profileSummary">Professional profile summary</label>
+    <textarea id="profileSummary" rows="3"></textarea>
+
+    <label for="profilePortfolio">Work portfolio summary</label>
+    <textarea id="profilePortfolio" rows="3"></textarea>
+
+    <label for="profilePortfolioUrl">Portfolio link (optional)</label>
+    <input id="profilePortfolioUrl" type="url">
+
+    <label for="profilePhoto">Photo link (optional)</label>
+    <input id="profilePhoto" type="url">
+
+    <label for="profileStatus">Profile status</label>
+    <select id="profileStatus">
+      <option value="draft">Draft – not public</option>
+      <option value="published">Published</option>
+      <option value="archived">Archived</option>
+    </select>
+
+    <label>
+      <input type="checkbox" id="profileConsent" style="width:auto">
+      Technician has expressly consented to public profile publication.
+    </label>
+
+    <button class="btn primary" type="submit">Save Technician Profile</button>
+    <button class="btn" type="button" onclick="resetTechnicianProfileForm()">Clear Form</button>
+  </form>
+
+  <h3>Existing Public Technician Profiles</h3>
+  <div id="adminTechnicianProfiles">Profiles will appear here after administrator login.</div>
+</div>
+ 
   <div class="admin-record-group">
     <h3>Service Requests</h3>
     <input type="search" id="searchServiceRequests" placeholder="Search service requests..." oninput="renderVumorenAdminRecords('service_requests')">
