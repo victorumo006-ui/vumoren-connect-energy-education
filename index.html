@@ -1412,8 +1412,7 @@ function renderAdminTechnicianProfiles() {
     edit.className = "btn";
     edit.textContent = "Edit profile";
     edit.addEventListener("click", () => {
-      const fields = {
-        profileApplication: profile.provider_application_id,
+      const fields = {     
         profileName: profile.display_name,
         profileTitle: profile.professional_title,
         profileSkills: profile.skills,
@@ -1474,7 +1473,6 @@ async function saveTechnicianProfile(event) {
   const profileId = form.dataset.profileId;
 
   const payload = {
-    provider_application_id: document.getElementById("profileApplication").value || null,
     display_name: document.getElementById("profileName").value.trim(),
     professional_title: document.getElementById("profileTitle").value.trim() || null,
     skills: document.getElementById("profileSkills").value.trim(),
@@ -1548,7 +1546,7 @@ async function loadVumorenAdminData() {
 
     vumorenAdminRecords.public_technician_profiles =
       await vumorenAdminRequest(
-        "/rest/v1/public_technician_profiles?select=*&order=created_at.desc"
+        "/rest/v1/public_technician_profiles?select=id,display_name,professional_title,skills,years_experience,qualifications_summary,service_areas,profile_summary,portfolio_summary,portfolio_url,photo_url,credentials_label,profile_status,consent_to_publish,created_at,updated_at&order=created_at.desc"
       );
 
     renderAdminTechnicianProfiles();
