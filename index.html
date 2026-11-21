@@ -482,7 +482,15 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
   <button type="button" onclick="logoutVumorenAdmin()">Sign Out</button>
 
   <p id="adminDashboardMessage" role="status" aria-live="polite"></p>
-
+<div class="admin-file-review">
+  <h3>File Submissions Review</h3>
+  <p>Review certificates, project photos, videos, business product images and catalogues submitted for approval.</p>
+  <button type="button" onclick="loadAdminFileSubmissions()">Refresh File Submissions</button>
+  <div id="adminFileSubmissionsMessage" role="status" aria-live="polite"></div>
+  <div id="adminFileSubmissionsList">
+    <p>File submissions will appear here.</p>
+  </div>
+</div>
 <div class="admin-profile-form">
   <h3>Professional Technician Profile Manager</h3>
   <p>Create and manage public profiles for approved technicians. Never publish a profile without the technician's consent.</p>
@@ -1194,6 +1202,133 @@ const VUMOREN_ADMIN_TABLES = {
   }
 };
 
+async function loadAdminFileSubmissions() {
+  const message = document.getElementById("adminFileSubmissionsMessage");
+  const list = document.getElementById("adminFileSubmissionsList");
+
+  message.textContent = "Loading file submissions...";
+  list.replaceChildren();
+
+  try {
+    const records = await vumorenAdminRequest(
+      "/rest/v1/rpc/admin_list_file_submissions",
+      { method: "POST" }
+    );
+
+    if (!Array.isArray(records) || records.length === 0) {
+      list.textContent = "No file submissions found yet.";
+      message.textContent = "File submissions loaded.";
+      return;
+    }
+
+    for (const record of records) {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const heading = document.createElement("h4");
+      heading.textContent = record.file_name || "Uploaded file";
+      card.appendChild(heading);
+
+      const details = document.createElement("p");
+      details.textContent =
+        "Category: " + record.file_category +
+        " | Status: " + record.review_status +
+        " | Uploaded: " + new Date(record.created_at).toLocaleString();
+      card.appendChild(details);
+
+      const description = document.createElement("p");
+      description.textContent = record.description || "No description supplied.";
+      card.appendChild(description);
+
+      const consent = document.createElement("p");
+      consent.textContent = record.consent_to_publish
+        ? "Consent to publish: Yes"
+        : "Consent to publish: No";
+      card.appendChild(consent);
+
+      const preview = document.createElement("p");
+      preview.textContent = "Preparing secure file preview...";
+      card.appendChild(preview);
+
+      try {
+        const storagePath = record.storage_path
+          .split("/")
+          .map(part => encodeURIComponent(part))
+          .join("/");
+
+        const signed = await vumorenAdminRequest(
+          "/storage/v1/object/sign/vumoren-submissions/" + storagePath,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ expiresIn: 300 })
+          }
+        );
+
+        const fileUrl = signed.signedURL.startsWith("http")
+          ? signed.signedURL
+          : VUMOREN_SUPABASE_URL + "/storage/v1" + signed.signedURL;
+
+        const link = document.createElement("a");
+        link.href = fileUrl;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "Open private file preview (5-minute link)";
+        preview.replaceChildren(link);
+      } catch (previewError) {
+        preview.textContent = "Preview unavailable: " + previewError.message;
+      }
+
+      if (record.review_status === "pending") {
+        const notes = document.createElement("textarea");
+        notes.placeholder = "Optional administrator review notes";
+        notes.rows = 2;
+        card.appendChild(notes);
+
+        for (const decision of ["approved", "rejected"]) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = decision === "approved"
+            ? "Approve submission"
+            : "Reject submission";
+
+          button.addEventListener("click", async () => {
+            button.disabled = true;
+            try {
+              await vumorenAdminRequest(
+                "/rest/v1/rpc/admin_review_file_submission",
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    p_submission_id: record.id,
+                    p_decision: decision,
+                    p_admin_notes: notes.value.trim() || null
+                  })
+                }
+              );
+
+              message.textContent = "Submission " + decision + " successfully.";
+              await loadAdminFileSubmissions();
+            } catch (error) {
+              message.textContent = error.message;
+              button.disabled = false;
+            }
+          });
+
+          card.appendChild(button);
+        }
+      }
+
+      list.appendChild(card);
+    }
+
+    message.textContent = records.length + " file submission(s) loaded.";
+  } catch (error) {
+    message.textContent = "Could not load submissions: " + error.message;
+  }
+}
+
 async function vumorenAdminRequest(path, options = {}) {
   const response = await fetch(VUMOREN_SUPABASE_URL + path, {
     ...options,
@@ -1550,7 +1685,9 @@ async function loadVumorenAdminData() {
       );
 
     renderAdminTechnicianProfiles();
- 
+   
+ await loadAdminFileSubmissions();
+   
     document.getElementById("countServiceRequests").textContent =
       vumorenAdminRecords.service_requests.length;
 
