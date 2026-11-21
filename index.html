@@ -1374,25 +1374,6 @@ async function loadPublicTechnicianDirectory() {
   }
 }
 
-function populateProfileApplicationOptions() {
-  const select = document.getElementById("profileApplication");
-  select.replaceChildren();
-
-  const empty = document.createElement("option");
-  empty.value = "";
-  empty.textContent = "No linked application";
-  select.appendChild(empty);
-
-  vumorenAdminRecords.provider_applications
-    .filter(app => app.status === "approved")
-    .forEach(app => {
-      const option = document.createElement("option");
-      option.value = app.id;
-      option.textContent = app.application_code + " — " + app.applicant_name;
-      select.appendChild(option);
-    });
-}
-
 function resetTechnicianProfileForm() {
   document.getElementById("technicianProfileForm").reset();
   document.getElementById("profileExperience").value = 0;
@@ -1570,7 +1551,6 @@ async function loadVumorenAdminData() {
         "/rest/v1/public_technician_profiles?select=*&order=created_at.desc"
       );
 
-    populateProfileApplicationOptions();
     renderAdminTechnicianProfiles();
  
     document.getElementById("countServiceRequests").textContent =
