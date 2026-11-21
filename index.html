@@ -593,6 +593,23 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
     <p>File submissions will appear here.</p>
   </div>
 </div>
+ 
+<div class="admin-professional-review">
+  <h3>Professional Account Approvals</h3>
+  <p>Review technician and business registrations. Approve suitable applicants or suspend accounts when necessary.</p>
+
+  <button type="button" onclick="loadAdminProfessionalAccounts()">
+    Refresh Professional Accounts
+  </button>
+
+  <div id="adminProfessionalAccountsMessage"
+       role="status" aria-live="polite"></div>
+
+  <div id="adminProfessionalAccountsList">
+    <p>Professional accounts will appear here.</p>
+  </div>
+</div>
+ 
 <div class="admin-profile-form">
   <h3>Professional Technician Profile Manager</h3>
   <p>Create and manage public profiles for approved technicians. Never publish a profile without the technician's consent.</p>
@@ -1586,7 +1603,9 @@ async function loginProfessionalAccount(event) {
         : account.account_status === "pending"
           ? "Your account is awaiting company approval. You cannot publish professional materials yet."
           : "Your account is suspended. Please contact V. UMOREN MULTI SERVICES LTD.";
-
+   
+document.getElementById("professionalUploadPanel").hidden =
+  account.account_status !== "approved";
     dashboard.hidden = false;
     document.getElementById("professionalLoginForm").reset();
     message.textContent = "Professional account verified successfully.";
@@ -1603,6 +1622,147 @@ function logoutProfessionalAccount() {
   document.getElementById("professionalDashboard").hidden = true;
   document.getElementById("professionalLoginMessage").textContent =
     "You have signed out.";
+}
+
+async function submitProfessionalFile(event) {
+  event.preventDefault();
+
+  const message = document.getElementById("professionalUploadMessage");
+  const file = document.getElementById("professionalUploadFile").files[0];
+
+  message.textContent = "Preparing your submission...";
+
+  try {
+    if (!professionalAccessToken) {
+      throw new Error("Please sign in first.");
+    }
+
+    if (!file) {
+      throw new Error("Please select a file.");
+    }
+
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "application/pdf",
+      "video/mp4",
+      "video/webm"
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error("Allowed formats: JPG, PNG, PDF, MP4 and WEBM.");
+    }
+
+    const accounts = await professionalRequest(
+      "/rest/v1/professional_accounts?select=user_id,account_type,account_status"
+    );
+
+    if (!Array.isArray(accounts) || accounts.length !== 1) {
+      throw new Error("Professional account not found.");
+    }
+
+    const account = accounts[0];
+
+    if (account.account_status !== "approved") {
+      throw new Error("Your account must be approved before uploading.");
+    }
+
+    const category = document.getElementById("professionalFileCategory").value;
+    const description = document.getElementById("professionalFileDescription").value.trim();
+    const consent = document.getElementById("professionalFileConsent").checked;
+
+    if (!category || !description || !consent) {
+      throw new Error("Complete all required fields and confirm consent.");
+    }
+
+    const technicianCategories = [
+      "technician_portfolio",
+      "technician_certificate",
+      "project_photo",
+      "project_video",
+      "other"
+    ];
+
+    const businessCategories = [
+      "business_product_image",
+      "business_catalogue",
+      "other"
+    ];
+
+    const allowedCategories = account.account_type === "technician"
+      ? technicianCategories
+      : businessCategories;
+
+    if (!allowedCategories.includes(category)) {
+      throw new Error("This document category is not available for your account type.");
+    }
+
+    if (category === "project_video" && !file.type.startsWith("video/")) {
+      throw new Error("Please select an MP4 or WEBM video.");
+    }
+
+    if (
+      ["project_photo", "business_product_image"].includes(category) &&
+      !file.type.startsWith("image/")
+    ) {
+      throw new Error("Please select a JPG or PNG image.");
+    }
+
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const storagePath = account.user_id + "/" +
+      crypto.randomUUID() + "_" + safeName;
+
+    message.textContent = "Uploading your private file...";
+
+    const pathForUrl = storagePath
+      .split("/")
+      .map(part => encodeURIComponent(part))
+      .join("/");
+
+    await professionalRequest(
+      "/storage/v1/object/vumoren-submissions/" + pathForUrl,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": file.type,
+          "x-upsert": "false"
+        },
+        body: file
+      }
+    );
+
+    message.textContent = "Saving your submission details...";
+
+    await professionalRequest(
+      "/rest/v1/vumoren_file_submissions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify({
+          uploader_id: account.user_id,
+          file_category: category,
+          file_name: file.name,
+          storage_path: storagePath,
+          mime_type: file.type,
+          description: description,
+          review_status: "pending",
+          consent_to_publish: true,
+          file_size_bytes: file.size
+        })
+      }
+    );
+
+    document.getElementById("professionalUploadForm").reset();
+
+    message.textContent =
+      "File submitted successfully. It is awaiting company review.";
+
+  } catch (error) {
+    message.textContent = "Upload failed: " + error.message;
+  }
 }
 
 async function loginVumorenAdmin(event) {
