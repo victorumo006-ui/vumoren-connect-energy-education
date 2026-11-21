@@ -1765,6 +1765,123 @@ async function submitProfessionalFile(event) {
   }
 }
 
+async function loadAdminProfessionalAccounts() {
+  const message = document.getElementById("adminProfessionalAccountsMessage");
+  const list = document.getElementById("adminProfessionalAccountsList");
+
+  message.textContent = "Loading professional accounts...";
+  list.replaceChildren();
+
+  try {
+    const accounts = await vumorenAdminRequest(
+      "/rest/v1/professional_accounts?select=user_id,account_type,display_name,business_name,account_status,created_at,reviewed_at&order=created_at.desc"
+    );
+
+    if (!Array.isArray(accounts) || accounts.length === 0) {
+      list.textContent = "No professional registrations found yet.";
+      message.textContent = "Account list loaded.";
+      return;
+    }
+
+    for (const account of accounts) {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const heading = document.createElement("h4");
+      heading.textContent = account.display_name;
+      card.appendChild(heading);
+
+      const details = document.createElement("p");
+      details.textContent =
+        "Type: " + account.account_type +
+        " | Status: " + account.account_status;
+      card.appendChild(details);
+
+      if (account.business_name) {
+        const business = document.createElement("p");
+        business.textContent = "Business: " + account.business_name;
+        card.appendChild(business);
+      }
+
+      const date = document.createElement("p");
+      date.textContent =
+        "Registered: " + new Date(account.created_at).toLocaleString();
+      card.appendChild(date);
+
+      const userId = document.createElement("p");
+      userId.textContent = "Account ID: " + account.user_id;
+      card.appendChild(userId);
+
+      if (account.account_status !== "suspended") {
+        const approveButton = document.createElement("button");
+        approveButton.type = "button";
+        approveButton.textContent = "Approve Account";
+        approveButton.disabled = account.account_status === "approved";
+
+        approveButton.addEventListener("click", () =>
+          updateAdminProfessionalAccount(account.user_id, "approved")
+        );
+
+        card.appendChild(approveButton);
+      }
+
+      if (account.account_status !== "suspended") {
+        const suspendButton = document.createElement("button");
+        suspendButton.type = "button";
+        suspendButton.textContent = "Suspend Account";
+
+        suspendButton.addEventListener("click", () =>
+          updateAdminProfessionalAccount(account.user_id, "suspended")
+        );
+
+        card.appendChild(suspendButton);
+      }
+
+      list.appendChild(card);
+    }
+
+    message.textContent = accounts.length + " professional account(s) loaded.";
+
+  } catch (error) {
+    message.textContent = "Could not load accounts: " + error.message;
+  }
+}
+
+async function updateAdminProfessionalAccount(userId, decision) {
+  const message = document.getElementById("adminProfessionalAccountsMessage");
+
+  if (!["approved", "suspended"].includes(decision)) {
+    message.textContent = "Invalid account decision.";
+    return;
+  }
+
+  try {
+    message.textContent = "Updating professional account...";
+
+    await vumorenAdminRequest(
+      "/rest/v1/professional_accounts?user_id=eq." +
+      encodeURIComponent(userId),
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify({
+          account_status: decision,
+          reviewed_at: new Date().toISOString()
+        })
+      }
+    );
+
+    message.textContent = "Professional account " + decision + " successfully.";
+    await loadAdminProfessionalAccounts();
+
+  } catch (error) {
+    message.textContent = "Account update failed: " + error.message;
+  }
+}
+
 async function loginVumorenAdmin(event) {
   event.preventDefault();
 
@@ -2104,6 +2221,7 @@ async function loadVumorenAdminData() {
     renderAdminTechnicianProfiles();
    
  await loadAdminFileSubmissions();
+   await loadAdminProfessionalAccounts();
    
     document.getElementById("countServiceRequests").textContent =
       vumorenAdminRecords.service_requests.length;
