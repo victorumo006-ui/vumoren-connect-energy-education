@@ -2715,6 +2715,20 @@ async function loadAdminProfessionalAccounts() {
         card.appendChild(suspendButton);
       }
 
+      if (account.account_type === "business") {
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.textContent = "Delete Business Profile";
+        deleteButton.style.background = "#a32626";
+        deleteButton.style.color = "white";
+
+        deleteButton.addEventListener("click", () =>
+          deleteAdminBusinessProfile(account.user_id)
+        );
+
+        card.appendChild(deleteButton);
+      }
+
       list.appendChild(card);
     }
 
