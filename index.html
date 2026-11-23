@@ -143,7 +143,61 @@ table{width:100%;border-collapse:collapse;margin-top:10px;background:white}th,td
 details{background:white;border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin:9px 0}summary{font-weight:bold;color:var(--g);cursor:pointer}
 .status{display:inline-block;background:#edf3ed;color:var(--g);border-radius:20px;padding:3px 9px;font-size:11px;font-weight:bold}
 footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-size:13px}
-@media(max-width:760px){header{align-items:flex-start;flex-direction:column}nav{gap:9px}.hero-inner,.calculator,.grid,.grid.two,.form-grid{grid-template-columns:1fr}.hero{padding-top:40px}}
+@media(max-width:760px) {
+  header.site-header {
+    flex-direction: row;
+    align-items: center;
+    padding: 12px 5%;
+  }
+
+  .menu-button {
+    display: block;
+  }
+
+  .site-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--g);
+    padding: 15px 5%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 5px;
+    max-height: 75vh;
+    overflow-y: auto;
+  }
+
+  .nav-toggle:checked ~ .site-nav {
+    display: flex;
+  }
+
+  .site-nav a,
+  .nav-dropdown summary {
+    display: block;
+    padding: 11px;
+  }
+
+  .dropdown-menu {
+    position: static;
+    box-shadow: none;
+    margin: 5px 10px;
+  }
+
+  .hero-inner,
+  .calculator,
+  .grid,
+  .grid.two,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding-top: 40px;
+  }
+}
+  
 </style>
 </head>
 <body>
