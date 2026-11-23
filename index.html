@@ -2493,6 +2493,7 @@ async function loadVumorenAdminData() {
    
  await loadAdminFileSubmissions();
    await loadAdminProfessionalAccounts();
+   await loadVumorenAnalytics();
    
     document.getElementById("countServiceRequests").textContent =
       vumorenAdminRecords.service_requests.length;
