@@ -573,7 +573,38 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
       <label for="professionalBusinessName">Business or company name (if applicable)</label>
       <input id="professionalBusinessName" type="text" maxlength="150">
 
-<div id="businessRegistrationDetails" hidden>
+      <label for="professionalRegisterEmail">Email address</label>
+      <input id="professionalRegisterEmail" type="email" required>
+
+      <label for="professionalRegisterPassword">Create password</label>
+      <input id="professionalRegisterPassword" type="password" minlength="8" required>
+
+      <button type="submit">Create Professional Account</button>
+      <p id="professionalRegisterMessage" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Professional account sign in</h3>
+    <form id="professionalLoginForm" onsubmit="loginProfessionalAccount(event)">
+      <label for="professionalLoginEmail">Email address</label>
+      <input id="professionalLoginEmail" type="email" required>
+
+      <label for="professionalLoginPassword">Password</label>
+      <input id="professionalLoginPassword" type="password" required>
+
+      <button type="submit">Sign In</button>
+      <p id="professionalLoginMessage" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+
+  <div class="card" id="professionalDashboard" hidden>
+    <h3>My Professional Dashboard</h3>
+    <p id="professionalWelcome"></p>
+    <p id="professionalAccountStatus"></p>
+    <p id="professionalDashboardMessage" role="status" aria-live="polite"></p>
+    
+   <form id="businessProfileForm" hidden onsubmit="submitBusinessProfile(event)">
   <h3>Business Verification Details</h3>
 
   <label for="businessRegistrationStatus">Is your business registered? *</label>
@@ -681,39 +712,7 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
     <input id="businessAccuracyConsent" type="checkbox">
     I confirm that the business information I provide is accurate.
   </label>
-</div>
-
-      <label for="professionalRegisterEmail">Email address</label>
-      <input id="professionalRegisterEmail" type="email" required>
-
-      <label for="professionalRegisterPassword">Create password</label>
-      <input id="professionalRegisterPassword" type="password" minlength="8" required>
-
-      <button type="submit">Create Professional Account</button>
-      <p id="professionalRegisterMessage" role="status" aria-live="polite"></p>
-    </form>
-  </div>
-
-  <div class="card">
-    <h3>Professional account sign in</h3>
-    <form id="professionalLoginForm" onsubmit="loginProfessionalAccount(event)">
-      <label for="professionalLoginEmail">Email address</label>
-      <input id="professionalLoginEmail" type="email" required>
-
-      <label for="professionalLoginPassword">Password</label>
-      <input id="professionalLoginPassword" type="password" required>
-
-      <button type="submit">Sign In</button>
-      <p id="professionalLoginMessage" role="status" aria-live="polite"></p>
-    </form>
-  </div>
-
-  <div class="card" id="professionalDashboard" hidden>
-    <h3>My Professional Dashboard</h3>
-    <p id="professionalWelcome"></p>
-    <p id="professionalAccountStatus"></p>
-    <p id="professionalDashboardMessage" role="status" aria-live="polite"></p>
-   
+   </form>
    <div class="card" id="professionalSubmissionHistory">
   <h3>My File Submission History</h3>
   <p>Track the company's review of your uploaded certificates, portfolios and product materials.</p>
@@ -2056,21 +2055,6 @@ async function loadVumorenAnalytics() {
       "Could not load analytics: " + error.message;
   }
 }
- 
-function toggleBusinessRegistrationDetails() {
-  const accountType =
-    document.getElementById("professionalAccountType").value;
-
-  const details =
-    document.getElementById("businessRegistrationDetails");
-
-  details.hidden = accountType !== "business";
-}
-
-document.getElementById("professionalAccountType")
-  .addEventListener("change", toggleBusinessRegistrationDetails);
-
-toggleBusinessRegistrationDetails();
 
 async function registerProfessionalAccount(event) {
   event.preventDefault();
