@@ -1605,6 +1605,15 @@ document.getElementById("professionalUploadPanel").hidden =
 
 function logoutProfessionalAccount() {
   professionalAccessToken = null;
+ const categorySelect =
+  document.getElementById("professionalFileCategory");
+
+categorySelect.replaceChildren();
+
+const placeholder = document.createElement("option");
+placeholder.value = "";
+placeholder.textContent = "Choose category";
+categorySelect.appendChild(placeholder);
   document.getElementById("professionalDashboard").hidden = true;
   document.getElementById("professionalLoginMessage").textContent =
     "You have signed out.";
