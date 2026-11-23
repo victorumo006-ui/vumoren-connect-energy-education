@@ -1539,7 +1539,104 @@ async function professionalRequest(path, options = {}) {
 
   return data;
 }
+ 
+async function loadVumorenAnalytics() {
+  const message =
+    document.getElementById("analyticsDashboardMessage");
 
+  message.textContent = "Loading website analytics...";
+
+  try {
+    const records = await vumorenAdminRequest(
+      "/rest/v1/vumoren_website_analytics" +
+      "?select=visitor_id,event_type,page_path,referrer_host,utm_source,created_at" +
+      "&order=created_at.desc&limit=5000"
+    );
+
+    const views = records.filter(
+      item => item.event_type === "page_view"
+    );
+
+    const today = new Date().toLocaleDateString("en-CA");
+
+    const todayViews = views.filter(item =>
+      new Date(item.created_at).toLocaleDateString("en-CA") === today
+    );
+
+    const uniqueVisitors = new Set(
+      views.map(item => item.visitor_id)
+    );
+
+    document.getElementById("analyticsTotalViews").textContent =
+      views.length.toLocaleString();
+
+    document.getElementById("analyticsUniqueVisitors").textContent =
+      uniqueVisitors.size.toLocaleString();
+
+    document.getElementById("analyticsTodayViews").textContent =
+      todayViews.length.toLocaleString();
+
+    const pageCounts = {};
+    views.forEach(item => {
+      const page = item.page_path || "/";
+      pageCounts[page] = (pageCounts[page] || 0) + 1;
+    });
+
+    const popularPages =
+      document.getElementById("analyticsPopularPages");
+
+    popularPages.replaceChildren();
+
+    Object.entries(pageCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .forEach(([page, count]) => {
+        const p = document.createElement("p");
+        p.textContent = page + " — " + count + " views";
+        popularPages.appendChild(p);
+      });
+
+    if (!views.length) {
+      popularPages.textContent = "No page visits recorded yet.";
+    }
+
+    const sources = {};
+
+    views.forEach(item => {
+      const source =
+        item.utm_source ||
+        item.referrer_host ||
+        "Direct / Unknown";
+
+      sources[source] = (sources[source] || 0) + 1;
+    });
+
+    const sourceList =
+      document.getElementById("analyticsMarketingSources");
+
+    sourceList.replaceChildren();
+
+    Object.entries(sources)
+      .sort((a, b) => b[1] - a[1])
+      .forEach(([source, count]) => {
+        const p = document.createElement("p");
+        p.textContent = source + " — " + count + " visits";
+        sourceList.appendChild(p);
+      });
+
+    if (!views.length) {
+      sourceList.textContent = "No marketing source data yet.";
+    }
+
+    message.textContent =
+      "Analytics updated successfully. Showing up to 5,000 recent records.";
+
+  } catch (error) {
+    message.textContent =
+      "Could not load analytics: " + error.message;
+  }
+}
+ 
 async function registerProfessionalAccount(event) {
   event.preventDefault();
 
