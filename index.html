@@ -2128,7 +2128,139 @@ async function registerProfessionalAccount(event) {
     message.textContent = error.message;
   }
 }
+  
+async function submitBusinessProfile(event) {
+  event.preventDefault();
 
+  const message = document.getElementById("businessProfileMessage");
+  const form = document.getElementById("businessProfileForm");
+
+  const getValue = (id) =>
+    document.getElementById(id).value.trim();
+
+  message.textContent = "Submitting business profile...";
+
+  try {
+    if (!professionalAccessToken || !professionalUserId) {
+      throw new Error("Please sign in again before submitting.");
+    }
+
+    const registrationStatus =
+      getValue("businessRegistrationStatus");
+
+    const cacNumber = getValue("businessCACNumber");
+
+    if (!registrationStatus) {
+      throw new Error("Please select your business registration status.");
+    }
+
+    if (
+      registrationStatus === "registered" &&
+      !cacNumber
+    ) {
+      throw new Error("Please enter your CAC registration number.");
+    }
+
+    const requiredFields = [
+      ["businessRepresentativeRole", "representative role"],
+      ["businessPhone", "business phone number"],
+      ["businessState", "state"],
+      ["businessLGA", "local government area"],
+      ["businessCommunity", "town or community"],
+      ["businessAddress", "business address"],
+      ["businessCategory", "business category"],
+      ["businessProducts", "products or services"],
+      ["businessDescription", "business description"]
+    ];
+
+    for (const [id, label] of requiredFields) {
+      if (!getValue(id)) {
+        throw new Error("Please enter your " + label + ".");
+      }
+    }
+
+    if (
+      !document.getElementById("businessAccuracyConsent").checked
+    ) {
+      throw new Error("Please confirm that your information is accurate.");
+    }
+
+    const establishmentYear =
+      getValue("businessEstablishmentYear");
+
+    const years =
+      getValue("businessYears");
+
+    const manufactures =
+      getValue("businessManufactures");
+
+    const distributes =
+      getValue("businessDistributes");
+
+    const profile = {
+      user_id: professionalUserId,
+      business_name: professionalBusinessName,
+      registration_status: registrationStatus,
+      registration_type:
+        getValue("businessRegistrationType") || null,
+      cac_registration_number:
+        registrationStatus === "registered" ? cacNumber : null,
+      establishment_year:
+        establishmentYear ? Number(establishmentYear) : null,
+      representative_name: professionalDisplayName,
+      representative_role:
+        getValue("businessRepresentativeRole"),
+      sex: getValue("businessSex") || null,
+      phone_number: getValue("businessPhone"),
+      alternative_phone:
+        getValue("businessAlternativePhone") || null,
+      country: "Nigeria",
+      state: getValue("businessState"),
+      lga: getValue("businessLGA"),
+      town_or_community: getValue("businessCommunity"),
+      business_address: getValue("businessAddress"),
+      operating_location:
+        getValue("businessOperatingLocation") || null,
+      business_category: getValue("businessCategory"),
+      products_or_services: getValue("businessProducts"),
+      business_description: getValue("businessDescription"),
+      manufactures_own_products:
+        manufactures === ""
+          ? null
+          : manufactures === "yes" || manufactures === "both",
+      distributes_for_other_manufacturers:
+        distributes === ""
+          ? null
+          : distributes === "yes",
+      years_in_operation:
+        years ? Number(years) : null,
+      website_or_social_media:
+        getValue("businessWebsite") || null
+    };
+
+    await professionalRequest(
+      "/rest/v1/professional_business_profiles?on_conflict=user_id",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Prefer": "resolution=merge-duplicates,return=minimal"
+        },
+        body: JSON.stringify(profile)
+      }
+    );
+
+    message.textContent =
+      "Business profile submitted successfully. Your information is awaiting company verification.";
+
+    form.hidden = true;
+
+  } catch (error) {
+    message.textContent =
+      "Submission failed: " + error.message;
+  }
+}
+  
 async function loginProfessionalAccount(event) {
   event.preventDefault();
 
