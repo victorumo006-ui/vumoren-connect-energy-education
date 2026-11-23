@@ -2360,7 +2360,38 @@ for (const option of categoryOptions) {
         : account.account_status === "pending"
           ? "Your account is awaiting company approval. You cannot publish professional materials yet."
           : "Your account is suspended. Please contact V. UMOREN MULTI SERVICES LTD.";
-   
+    
+   const businessProfileForm =
+  document.getElementById("businessProfileForm");
+
+businessProfileForm.hidden = true;
+
+if (account.account_type === "business") {
+  const profiles = await professionalRequest(
+    "/rest/v1/professional_business_profiles?select=verification_status&user_id=eq." +
+    encodeURIComponent(session.user.id)
+  );
+
+  if (!Array.isArray(profiles) || profiles.length === 0) {
+    if (account.account_status === "pending") {
+      businessProfileForm.hidden = false;
+
+      document.getElementById("professionalDashboardMessage").textContent =
+        "Please complete your business profile before company verification.";
+    }
+  } else {
+    const profileStatus = profiles[0].verification_status;
+
+    document.getElementById("professionalDashboardMessage").textContent =
+      "Business verification status: " +
+      profileStatus.replace("_", " ").toUpperCase() + ".";
+
+    if (profileStatus === "rejected") {
+      businessProfileForm.hidden = false;
+    }
+  }
+}
+    
 document.getElementById("professionalUploadPanel").hidden =
   account.account_status !== "approved";
     dashboard.hidden = false;
