@@ -2394,7 +2394,8 @@ businessProfileVerified = profileStatus === "verified";
 }
     
 document.getElementById("professionalUploadPanel").hidden =
-  account.account_status !== "approved";
+  account.account_status !== "approved" ||
+  (account.account_type === "business" && !businessProfileVerified);
     dashboard.hidden = false;
    await loadMyProfessionalSubmissions();
     document.getElementById("professionalLoginForm").reset();
