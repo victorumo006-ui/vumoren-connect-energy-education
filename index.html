@@ -573,6 +573,116 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
       <label for="professionalBusinessName">Business or company name (if applicable)</label>
       <input id="professionalBusinessName" type="text" maxlength="150">
 
+<div id="businessRegistrationDetails" hidden>
+  <h3>Business Verification Details</h3>
+
+  <label for="businessRegistrationStatus">Is your business registered? *</label>
+  <select id="businessRegistrationStatus">
+    <option value="">Choose registration status</option>
+    <option value="registered">Yes, registered</option>
+    <option value="not_registered">No, not yet registered</option>
+  </select>
+
+  <label for="businessRegistrationType">Registration type</label>
+  <select id="businessRegistrationType">
+    <option value="">Choose type</option>
+    <option value="limited_company">Limited Liability Company (Ltd)</option>
+    <option value="business_name">Business Name / Enterprise</option>
+    <option value="incorporated_trustees">Incorporated Trustees</option>
+    <option value="other">Other</option>
+  </select>
+
+  <label for="businessCACNumber">CAC registration number</label>
+  <input id="businessCACNumber" type="text" maxlength="50">
+
+  <label for="businessEstablishmentYear">Year established</label>
+  <input id="businessEstablishmentYear" type="number" min="1900" max="2026">
+
+  <label for="businessRepresentativeRole">Your position in the business *</label>
+  <select id="businessRepresentativeRole">
+    <option value="">Choose position</option>
+    <option value="owner">Owner</option>
+    <option value="director">Director</option>
+    <option value="manager">Manager</option>
+    <option value="authorised_representative">Authorised representative</option>
+  </select>
+
+  <label for="businessSex">Sex (optional)</label>
+  <select id="businessSex">
+    <option value="">Prefer not to say</option>
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+    <option value="other">Other</option>
+  </select>
+
+  <label for="businessPhone">Business phone number *</label>
+  <input id="businessPhone" type="tel">
+
+  <label for="businessAlternativePhone">Alternative phone number</label>
+  <input id="businessAlternativePhone" type="tel">
+
+  <label for="businessState">State *</label>
+  <input id="businessState" type="text">
+
+  <label for="businessLGA">Local Government Area *</label>
+  <input id="businessLGA" type="text">
+
+  <label for="businessCommunity">Town or community *</label>
+  <input id="businessCommunity" type="text">
+
+  <label for="businessAddress">Full business address *</label>
+  <textarea id="businessAddress" rows="3"></textarea>
+
+  <label for="businessOperatingLocation">Business operating location</label>
+  <select id="businessOperatingLocation">
+    <option value="">Choose location type</option>
+    <option value="shop">Physical shop</option>
+    <option value="factory">Factory</option>
+    <option value="warehouse">Warehouse</option>
+    <option value="office">Office</option>
+    <option value="online">Online only</option>
+    <option value="other">Other</option>
+  </select>
+
+  <label for="businessCategory">Main business category *</label>
+  <input id="businessCategory" type="text">
+
+  <label for="businessProducts">Products manufactured or supplied *</label>
+  <textarea id="businessProducts" rows="3"></textarea>
+
+  <label for="businessDescription">Describe your business *</label>
+  <textarea id="businessDescription" rows="4"></textarea>
+
+  <label for="businessManufactures">Do you manufacture your own products?</label>
+  <select id="businessManufactures">
+    <option value="">Choose answer</option>
+    <option value="yes">Yes</option>
+    <option value="no">No</option>
+    <option value="both">Both manufacturing and distribution</option>
+  </select>
+
+  <label for="businessDistributes">Do you distribute for other manufacturers?</label>
+  <select id="businessDistributes">
+    <option value="">Choose answer</option>
+    <option value="yes">Yes</option>
+    <option value="no">No</option>
+  </select>
+
+  <label for="businessYears">Years in operation</label>
+  <input id="businessYears" type="number" min="0" max="200">
+
+  <label for="businessWebsite">Website or social media link</label>
+  <input id="businessWebsite" type="url">
+
+  <p>Business verification documents will be requested through a secure submission process.</p>
+  <p>NIN is optional and will only be considered when a secure, authorised verification method is available.</p>
+
+  <label>
+    <input id="businessAccuracyConsent" type="checkbox">
+    I confirm that the business information I provide is accurate.
+  </label>
+</div>
+
       <label for="professionalRegisterEmail">Email address</label>
       <input id="professionalRegisterEmail" type="email" required>
 
