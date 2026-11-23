@@ -110,13 +110,83 @@ header{background:var(--g);color:white;padding:14px 5%;display:flex;justify-cont
   font-weight: bold;
 }
  
-.hero{padding:58px 6%;background:linear-gradient(120deg,var(--g),var(--g2));color:white}
-.hero-inner{max-width:1120px;margin:auto;display:grid;grid-template-columns:1.35fr .85fr;gap:28px;align-items:center}
-.eyebrow{color:var(--lime);font-size:12px;font-weight:bold;letter-spacing:1.3px;text-transform:uppercase}
-h1{font-size:clamp(34px,5vw,56px);line-height:1.1;margin:12px 0}.hero p{color:#e3eee8;font-size:17px}
-.panel{background:#ffffff12;border:1px solid #ffffff30;border-radius:16px;padding:22px}.panel li{margin:8px 0}
-.btn{display:inline-block;padding:11px 16px;border:0;border-radius:8px;font-weight:bold;text-decoration:none;cursor:pointer;margin:5px 5px 5px 0;font:inherit;font-weight:bold}
-.primary{background:var(--lime);color:var(--g)}.secondary{background:transparent;border:1px solid white;color:white}
+
+.hero {
+  padding: 72px 6%;
+  background:
+    radial-gradient(circle at 85% 20%, #ffffff20, transparent 30%),
+    linear-gradient(120deg, var(--g), var(--g2));
+  color: white;
+}
+
+.hero-inner {
+  max-width: 1120px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1.3fr .7fr;
+  gap: 38px;
+  align-items: center;
+}
+
+.eyebrow {
+  color: var(--lime);
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: clamp(36px, 5vw, 58px);
+  line-height: 1.08;
+  letter-spacing: -1.2px;
+  margin: 16px 0;
+}
+
+.hero p {
+  color: #e3eee8;
+  font-size: 17px;
+  line-height: 1.8;
+  max-width: 650px;
+}
+
+.panel {
+  background: #ffffff12;
+  border: 1px solid #ffffff35;
+  border-radius: 18px;
+  padding: 25px;
+  box-shadow: 0 12px 35px #0002;
+}
+
+.panel li {
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  margin: 8px 6px 5px 0;
+  font: inherit;
+  font-weight: bold;
+}
+
+.primary {
+  background: var(--lime);
+  color: var(--g);
+}
+
+.secondary {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+}
+
 main{max-width:1120px;margin:auto;padding:28px 5% 60px}.section{padding:28px 0;scroll-margin-top:100px}
 .heading{max-width:760px;margin-bottom:20px}.heading h2{color:var(--g);font-size:30px;margin:5px 0}.heading p,.card p{color:var(--muted)}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.grid.two{grid-template-columns:repeat(2,1fr)}
