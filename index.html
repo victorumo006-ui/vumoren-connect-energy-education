@@ -2080,74 +2080,8 @@ async function registerProfessionalAccount(event) {
       throw new Error("Please enter your full name.");
     }
 
-    let businessDraft = null;
-
-    if (accountType === "business") {
-      const requiredFields = [
-        ["businessRegistrationStatus", "Please select your business registration status."],
-        ["businessRepresentativeRole", "Please select your position in the business."],
-        ["businessPhone", "Please enter your business phone number."],
-        ["businessState", "Please enter your state."],
-        ["businessLGA", "Please enter your Local Government Area."],
-        ["businessCommunity", "Please enter your town or community."],
-        ["businessAddress", "Please enter your full business address."],
-        ["businessCategory", "Please enter your business category."],
-        ["businessProducts", "Please describe the products or services you supply."],
-        ["businessDescription", "Please describe your business."]
-      ];
-
-      if (!businessName) {
-        throw new Error("Please enter your business or company name.");
-      }
-
-      for (const [id, errorMessage] of requiredFields) {
-        if (!getValue(id)) {
-          throw new Error(errorMessage);
-        }
-      }
-
-      const registrationStatus = getValue("businessRegistrationStatus");
-      const cacNumber = getValue("businessCACNumber");
-
-      if (registrationStatus === "registered" && !cacNumber) {
-        throw new Error("Please enter your CAC registration number.");
-      }
-
-      if (!document.getElementById("businessAccuracyConsent").checked) {
-        throw new Error("Please confirm that your business information is accurate.");
-      }
-
-      const year = getValue("businessEstablishmentYear");
-      const years = getValue("businessYears");
-
-      businessDraft = {
-        business_name: businessName,
-        registration_status: registrationStatus,
-        registration_type: getValue("businessRegistrationType") || null,
-        cac_registration_number: registrationStatus === "registered" ? cacNumber : null,
-        establishment_year: year ? Number(year) : null,
-        representative_name: displayName,
-        representative_role: getValue("businessRepresentativeRole"),
-        sex: getValue("businessSex") || null,
-        phone_number: getValue("businessPhone"),
-        alternative_phone: getValue("businessAlternativePhone") || null,
-        country: "Nigeria",
-        state: getValue("businessState"),
-        lga: getValue("businessLGA"),
-        town_or_community: getValue("businessCommunity"),
-        business_address: getValue("businessAddress"),
-        operating_location: getValue("businessOperatingLocation") || null,
-        business_category: getValue("businessCategory"),
-        products_or_services: getValue("businessProducts"),
-        business_description: getValue("businessDescription"),
-        manufactures_own_products:
-          getValue("businessManufactures") === "yes" ||
-          getValue("businessManufactures") === "both",
-        distributes_for_other_manufacturers:
-          getValue("businessDistributes") === "yes",
-        years_in_operation: years ? Number(years) : null,
-        website_or_social_media: getValue("businessWebsite") || null
-      };
+        if (accountType === "business" && !businessName) {
+      throw new Error("Please enter your business or company name.");
     }
 
     const response = await fetch(
