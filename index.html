@@ -532,6 +532,46 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
   <button type="button" onclick="logoutVumorenAdmin()">Sign Out</button>
 
   <p id="adminDashboardMessage" role="status" aria-live="polite"></p>
+ <div class="admin-analytics">
+  <h3>Website Visitor Analytics</h3>
+  <p>Anonymous visitor activity and marketing performance.</p>
+
+  <button type="button" onclick="loadVumorenAnalytics()">
+    Refresh Website Analytics
+  </button>
+
+  <div class="grid">
+    <div class="card">
+      <h4>Total Page Views</h4>
+      <p id="analyticsTotalViews">0</p>
+    </div>
+
+    <div class="card">
+      <h4>Estimated Unique Visitors</h4>
+      <p id="analyticsUniqueVisitors">0</p>
+    </div>
+
+    <div class="card">
+      <h4>Today's Page Views</h4>
+      <p id="analyticsTodayViews">0</p>
+    </div>
+  </div>
+
+  <h4>Popular Website Pages</h4>
+  <div id="analyticsPopularPages">
+    <p>Analytics will appear here.</p>
+  </div>
+
+  <h4>Marketing Sources</h4>
+  <div id="analyticsMarketingSources">
+    <p>Marketing sources will appear here.</p>
+  </div>
+
+  <p id="analyticsDashboardMessage"
+     role="status"
+     aria-live="polite"></p>
+</div>
+ 
 <div class="admin-file-review">
   <h3>File Submissions Review</h3>
   <p>Review certificates, project photos, videos, business product images and catalogues submitted for approval.</p>
