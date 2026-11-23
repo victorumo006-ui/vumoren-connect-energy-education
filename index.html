@@ -2251,6 +2251,63 @@ async function loginProfessionalAccount(event) {
     }
 
     const account = accounts[0];
+    
+    if (account.account_type === "business") {
+      const businessDraft =
+        session.user.user_metadata?.business_profile_draft;
+
+      if (businessDraft) {
+        message.textContent =
+          "Saving your business verification details...";
+
+        const profileResponse = await fetch(
+          VUMOREN_SUPABASE_URL +
+          "/rest/v1/professional_business_profiles?on_conflict=user_id",
+          {
+            method: "POST",
+            headers: {
+              "apikey": VUMOREN_SUPABASE_KEY,
+              "Authorization": "Bearer " + session.access_token,
+              "Content-Type": "application/json",
+              "Prefer": "resolution=merge-duplicates,return=minimal"
+            },
+            body: JSON.stringify({
+              ...businessDraft,
+              user_id: session.user.id
+            })
+          }
+        );
+
+        if (!profileResponse.ok) {
+          const error = await profileResponse.json().catch(() => ({}));
+          throw new Error(
+            error.message ||
+            error.details ||
+            "Your business profile could not be saved. Please try signing in again."
+          );
+        }
+
+        // Clear the temporary draft after successful profile submission.
+        const metadata = {
+          ...session.user.user_metadata,
+          business_profile_draft: null
+        };
+
+        await fetch(
+          VUMOREN_SUPABASE_URL + "/auth/v1/user",
+          {
+            method: "PUT",
+            headers: {
+              "apikey": VUMOREN_SUPABASE_KEY,
+              "Authorization": "Bearer " + session.access_token,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ data: metadata })
+          }
+        );
+      }
+    }
+
    const categorySelect =
   document.getElementById("professionalFileCategory");
 
