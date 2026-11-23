@@ -2725,6 +2725,53 @@ async function loadAdminProfessionalAccounts() {
   }
 }
 
+async function deleteAdminBusinessProfile(userId) {
+  const message = document.getElementById(
+    "adminProfessionalAccountsMessage"
+  );
+
+  const confirmed = window.confirm(
+    "DELETE BUSINESS VERIFICATION PROFILE?\n\n" +
+    "This permanently deletes the business verification profile only. " +
+    "The user's login account will NOT be deleted.\n\n" +
+    "Continue?"
+  );
+
+  if (!confirmed) {
+    message.textContent = "Deletion cancelled.";
+    return;
+  }
+
+  try {
+    message.textContent = "Deleting business verification profile...";
+
+    const deleted = await vumorenAdminRequest(
+      "/rest/v1/professional_business_profiles?user_id=eq." +
+      encodeURIComponent(userId),
+      {
+        method: "DELETE",
+        headers: {
+          "Prefer": "return=representation"
+        }
+      }
+    );
+
+    if (!Array.isArray(deleted) || deleted.length === 0) {
+      message.textContent = "No business verification profile was found.";
+      return;
+    }
+
+    message.textContent =
+      "Business verification profile deleted. Login account retained.";
+
+    await loadAdminProfessionalAccounts();
+
+  } catch (error) {
+    message.textContent =
+      "Profile deletion failed: " + error.message;
+  }
+}
+  
 async function updateAdminProfessionalAccount(userId, decision) {
   const message = document.getElementById("adminProfessionalAccountsMessage");
 
