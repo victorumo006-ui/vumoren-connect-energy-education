@@ -190,8 +190,37 @@ h1 {
 main{max-width:1120px;margin:auto;padding:28px 5% 60px}.section{padding:28px 0;scroll-margin-top:100px}
 .heading{max-width:760px;margin-bottom:20px}.heading h2{color:var(--g);font-size:30px;margin:5px 0}.heading p,.card p{color:var(--muted)}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.grid.two{grid-template-columns:repeat(2,1fr)}
-.card{background:white;border:1px solid var(--line);border-radius:14px;padding:19px;box-shadow:0 5px 18px #163b2a08}
-.card h3{color:var(--g);margin:7px 0}.icon{font-size:26px}
+.card {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 5px 18px #163b2a0a;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px #163b2a16;
+  border-color: var(--g2);
+}
+
+.card h3 {
+  color: var(--g);
+  margin: 10px 0;
+  line-height: 1.35;
+}
+
+.card p {
+  line-height: 1.7;
+}
+
+.icon {
+  font-size: 30px;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+
 .profile-card{background:white;border:1px solid var(--line);border-radius:14px;padding:19px;box-shadow:0 5px 18px #163b2a08}
 .profile-card h3{color:var(--g);margin:8px 0}
 .profile-meta{font-size:13px;color:var(--muted);margin:6px 0}
