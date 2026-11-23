@@ -1744,19 +1744,22 @@ async function loadAdminProfessionalAccounts() {
       const userId = document.createElement("p");
       userId.textContent = "Account ID: " + account.user_id;
       card.appendChild(userId);
+    
+{
+  const approveButton = document.createElement("button");
+  approveButton.type = "button";
+  approveButton.textContent =
+    account.account_status === "suspended"
+      ? "Reactivate Account"
+      : "Approve Account";
+  approveButton.disabled = account.account_status === "approved";
 
-      if (account.account_status !== "suspended") {
-        const approveButton = document.createElement("button");
-        approveButton.type = "button";
-        approveButton.textContent = "Approve Account";
-        approveButton.disabled = account.account_status === "approved";
+  approveButton.addEventListener("click", () =>
+    updateAdminProfessionalAccount(account.user_id, "approved")
+  );
 
-        approveButton.addEventListener("click", () =>
-          updateAdminProfessionalAccount(account.user_id, "approved")
-        );
-
-        card.appendChild(approveButton);
-      }
+  card.appendChild(approveButton);
+}
 
       if (account.account_status !== "suspended") {
         const suspendButton = document.createElement("button");
