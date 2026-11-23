@@ -1942,6 +1942,8 @@ async function vumorenAdminRequest(path, options = {}) {
 
 let professionalAccessToken = null;
   let professionalUserId = null;
+  let professionalDisplayName = null;
+let professionalBusinessName = null;
 
 async function professionalRequest(path, options = {}) {
   const response = await fetch(VUMOREN_SUPABASE_URL + path, {
