@@ -2057,6 +2057,21 @@ async function loadVumorenAnalytics() {
   }
 }
  
+function toggleBusinessRegistrationDetails() {
+  const accountType =
+    document.getElementById("professionalAccountType").value;
+
+  const details =
+    document.getElementById("businessRegistrationDetails");
+
+  details.hidden = accountType !== "business";
+}
+
+document.getElementById("professionalAccountType")
+  .addEventListener("change", toggleBusinessRegistrationDetails);
+
+toggleBusinessRegistrationDetails();
+
 async function registerProfessionalAccount(event) {
   event.preventDefault();
 
