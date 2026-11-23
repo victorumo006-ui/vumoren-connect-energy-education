@@ -712,6 +712,8 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
     <input id="businessAccuracyConsent" type="checkbox">
     I confirm that the business information I provide is accurate.
   </label>
+       <button type="submit">Submit Business Profile for Verification</button>
+  <p id="businessProfileMessage" role="status" aria-live="polite"></p>
    </form>
    <div class="card" id="professionalSubmissionHistory">
   <h3>My File Submission History</h3>
@@ -1939,6 +1941,7 @@ async function vumorenAdminRequest(path, options = {}) {
 }
 
 let professionalAccessToken = null;
+  let professionalUserId = null;
 
 async function professionalRequest(path, options = {}) {
   const response = await fetch(VUMOREN_SUPABASE_URL + path, {
