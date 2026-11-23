@@ -2252,9 +2252,10 @@ async function submitBusinessProfile(event) {
       }
     );
 
-    message.textContent =
+        message.textContent =
       "Business profile submitted successfully. Your information is awaiting company verification.";
 
+    form.reset();
     form.hidden = true;
 
   } catch (error) {
