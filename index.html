@@ -2365,7 +2365,7 @@ for (const option of categoryOptions) {
   document.getElementById("businessProfileForm");
 
 businessProfileForm.hidden = true;
-
+let businessProfileVerified = false;
 if (account.account_type === "business") {
   const profiles = await professionalRequest(
     "/rest/v1/professional_business_profiles?select=verification_status&user_id=eq." +
@@ -2381,7 +2381,8 @@ if (account.account_type === "business") {
     }
   } else {
     const profileStatus = profiles[0].verification_status;
-
+businessProfileVerified = profileStatus === "verified";
+    
     document.getElementById("professionalDashboardMessage").textContent =
       "Business verification status: " +
       profileStatus.replace("_", " ").toUpperCase() + ".";
