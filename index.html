@@ -1555,6 +1555,7 @@ async function loginProfessionalAccount(event) {
 document.getElementById("professionalUploadPanel").hidden =
   account.account_status !== "approved";
     dashboard.hidden = false;
+   await loadMyProfessionalSubmissions();
     document.getElementById("professionalLoginForm").reset();
     message.textContent = "Professional account verified successfully.";
 
