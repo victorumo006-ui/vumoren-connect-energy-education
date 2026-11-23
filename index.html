@@ -1571,7 +1571,78 @@ function logoutProfessionalAccount() {
   document.getElementById("professionalLoginMessage").textContent =
     "You have signed out.";
 }
+ 
+async function loadMyProfessionalSubmissions() {
+  const message = document.getElementById("professionalHistoryMessage");
+  const list = document.getElementById("professionalHistoryList");
 
+  if (!professionalAccessToken) {
+    message.textContent = "Please sign in to view your submissions.";
+    return;
+  }
+
+  message.textContent = "Loading your submission history...";
+  list.replaceChildren();
+
+  try {
+    const records = await professionalRequest(
+      "/rest/v1/vumoren_file_submissions?select=file_name,file_category,description,review_status,admin_notes,created_at,reviewed_at&order=created_at.desc"
+    );
+
+    if (!Array.isArray(records) || records.length === 0) {
+      list.textContent = "You have not submitted any files yet.";
+      message.textContent = "Submission history loaded.";
+      return;
+    }
+
+    for (const record of records) {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const heading = document.createElement("h4");
+      heading.textContent = record.file_name || "Uploaded file";
+      card.appendChild(heading);
+
+      const details = document.createElement("p");
+      details.textContent =
+        "Category: " + record.file_category +
+        " | Status: " + record.review_status.toUpperCase();
+      card.appendChild(details);
+
+      const description = document.createElement("p");
+      description.textContent = record.description || "No description.";
+      card.appendChild(description);
+
+      const date = document.createElement("p");
+      date.textContent =
+        "Submitted: " + new Date(record.created_at).toLocaleString();
+      card.appendChild(date);
+
+      if (record.reviewed_at) {
+        const reviewed = document.createElement("p");
+        reviewed.textContent =
+          "Reviewed: " + new Date(record.reviewed_at).toLocaleString();
+        card.appendChild(reviewed);
+      }
+
+      if (record.admin_notes) {
+        const notes = document.createElement("p");
+        notes.textContent = "Company feedback: " + record.admin_notes;
+        card.appendChild(notes);
+      }
+
+      list.appendChild(card);
+    }
+
+    message.textContent =
+      records.length + " submission(s) found.";
+
+  } catch (error) {
+    message.textContent =
+      "Could not load submission history: " + error.message;
+  }
+}
+ 
 async function submitProfessionalFile(event) {
   event.preventDefault();
 
