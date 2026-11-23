@@ -319,6 +319,21 @@ footer{background:#102e27;color:#d9e6df;padding:28px 5%;text-align:center;font-s
     <p id="professionalAccountStatus"></p>
     <p id="professionalDashboardMessage" role="status" aria-live="polite"></p>
    
+   <div class="card" id="professionalSubmissionHistory">
+  <h3>My File Submission History</h3>
+  <p>Track the company's review of your uploaded certificates, portfolios and product materials.</p>
+
+  <button type="button" onclick="loadMyProfessionalSubmissions()">
+    Refresh Submission History
+  </button>
+
+  <p id="professionalHistoryMessage" role="status" aria-live="polite"></p>
+
+  <div id="professionalHistoryList">
+    <p>Your submissions will appear here after you sign in.</p>
+  </div>
+   </div>
+   
 <div id="professionalUploadPanel" hidden>
   <h3>Submit Professional Documents</h3>
   <p>Upload certificates, project evidence, product photographs or catalogues for company review.</p>
