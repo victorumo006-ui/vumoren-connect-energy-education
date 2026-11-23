@@ -2770,14 +2770,30 @@ async function deleteAdminBusinessProfile(userId) {
       }
     );
 
-    if (!Array.isArray(deleted) || deleted.length === 0) {
+        if (!Array.isArray(deleted) || deleted.length === 0) {
       message.textContent = "No business verification profile was found.";
       return;
     }
 
-    message.textContent =
-      "Business verification profile deleted. Login account retained.";
+    await vumorenAdminRequest(
+      "/rest/v1/professional_accounts?user_id=eq." +
+      encodeURIComponent(userId) +
+      "&account_type=eq.business",
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify({
+          account_status: "pending",
+          reviewed_at: null
+        })
+      }
+    );
 
+    message.textContent =
+      "Business profile deleted. Account reset to pending. Login retained.";
     await loadAdminProfessionalAccounts();
 
   } catch (error) {
