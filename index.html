@@ -2173,6 +2173,10 @@ async function loginProfessionalAccount(event) {
     }
 
     const account = accounts[0];
+    
+    professionalUserId = session.user.id;
+professionalDisplayName = account.display_name;
+professionalBusinessName = account.business_name;
 
    const categorySelect =
   document.getElementById("professionalFileCategory");
