@@ -1538,6 +1538,43 @@ async function loginProfessionalAccount(event) {
     }
 
     const account = accounts[0];
+   const categorySelect =
+  document.getElementById("professionalFileCategory");
+
+const categoryOptions =
+  account.account_type === "technician"
+    ? [
+        { value: "technician_portfolio", label: "Technician portfolio" },
+        { value: "technician_certificate", label: "Certificate or qualification" },
+        { value: "project_photo", label: "Project photograph" },
+        { value: "project_video", label: "Project video" },
+        { value: "other", label: "Other supporting document" }
+      ]
+    : account.account_type === "business"
+      ? [
+          { value: "business_product_image", label: "Business product photograph" },
+          { value: "business_catalogue", label: "Business brochure or catalogue" },
+          { value: "other", label: "Other supporting document" }
+        ]
+      : null;
+
+if (!categoryOptions) {
+  throw new Error("Unrecognised professional account type.");
+}
+
+categorySelect.replaceChildren();
+
+const placeholder = document.createElement("option");
+placeholder.value = "";
+placeholder.textContent = "Choose category";
+categorySelect.appendChild(placeholder);
+
+for (const option of categoryOptions) {
+  const item = document.createElement("option");
+  item.value = option.value;
+  item.textContent = option.label;
+  categorySelect.appendChild(item);
+}
 
     document.getElementById("professionalWelcome").textContent =
       "Welcome, " + account.display_name + " (" + account.account_type + ").";
