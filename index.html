@@ -2076,12 +2076,15 @@ async function registerProfessionalAccount(event) {
   event.preventDefault();
 
   const message = document.getElementById("professionalRegisterMessage");
-  message.textContent = "Creating your professional account...";
+  message.textContent = "Checking registration details...";
 
-  const accountType = document.getElementById("professionalAccountType").value;
-  const displayName = document.getElementById("professionalDisplayName").value.trim();
-  const businessName = document.getElementById("professionalBusinessName").value.trim();
-  const email = document.getElementById("professionalRegisterEmail").value.trim();
+  const getValue = (id) =>
+    document.getElementById(id).value.trim();
+
+  const accountType = getValue("professionalAccountType");
+  const displayName = getValue("professionalDisplayName");
+  const businessName = getValue("professionalBusinessName");
+  const email = getValue("professionalRegisterEmail");
   const password = document.getElementById("professionalRegisterPassword").value;
 
   try {
@@ -2089,8 +2092,78 @@ async function registerProfessionalAccount(event) {
       throw new Error("Please select a valid account type.");
     }
 
-    if (accountType === "business" && !businessName) {
-      throw new Error("Please enter your business or company name.");
+    if (!displayName) {
+      throw new Error("Please enter your full name.");
+    }
+
+    let businessDraft = null;
+
+    if (accountType === "business") {
+      const requiredFields = [
+        ["businessRegistrationStatus", "Please select your business registration status."],
+        ["businessRepresentativeRole", "Please select your position in the business."],
+        ["businessPhone", "Please enter your business phone number."],
+        ["businessState", "Please enter your state."],
+        ["businessLGA", "Please enter your Local Government Area."],
+        ["businessCommunity", "Please enter your town or community."],
+        ["businessAddress", "Please enter your full business address."],
+        ["businessCategory", "Please enter your business category."],
+        ["businessProducts", "Please describe the products or services you supply."],
+        ["businessDescription", "Please describe your business."]
+      ];
+
+      if (!businessName) {
+        throw new Error("Please enter your business or company name.");
+      }
+
+      for (const [id, errorMessage] of requiredFields) {
+        if (!getValue(id)) {
+          throw new Error(errorMessage);
+        }
+      }
+
+      const registrationStatus = getValue("businessRegistrationStatus");
+      const cacNumber = getValue("businessCACNumber");
+
+      if (registrationStatus === "registered" && !cacNumber) {
+        throw new Error("Please enter your CAC registration number.");
+      }
+
+      if (!document.getElementById("businessAccuracyConsent").checked) {
+        throw new Error("Please confirm that your business information is accurate.");
+      }
+
+      const year = getValue("businessEstablishmentYear");
+      const years = getValue("businessYears");
+
+      businessDraft = {
+        business_name: businessName,
+        registration_status: registrationStatus,
+        registration_type: getValue("businessRegistrationType") || null,
+        cac_registration_number: registrationStatus === "registered" ? cacNumber : null,
+        establishment_year: year ? Number(year) : null,
+        representative_name: displayName,
+        representative_role: getValue("businessRepresentativeRole"),
+        sex: getValue("businessSex") || null,
+        phone_number: getValue("businessPhone"),
+        alternative_phone: getValue("businessAlternativePhone") || null,
+        country: "Nigeria",
+        state: getValue("businessState"),
+        lga: getValue("businessLGA"),
+        town_or_community: getValue("businessCommunity"),
+        business_address: getValue("businessAddress"),
+        operating_location: getValue("businessOperatingLocation") || null,
+        business_category: getValue("businessCategory"),
+        products_or_services: getValue("businessProducts"),
+        business_description: getValue("businessDescription"),
+        manufactures_own_products:
+          getValue("businessManufactures") === "yes" ||
+          getValue("businessManufactures") === "both",
+        distributes_for_other_manufacturers:
+          getValue("businessDistributes") === "yes",
+        years_in_operation: years ? Number(years) : null,
+        website_or_social_media: getValue("businessWebsite") || null
+      };
     }
 
     const response = await fetch(
@@ -2107,7 +2180,8 @@ async function registerProfessionalAccount(event) {
           data: {
             account_type: accountType,
             display_name: displayName,
-            business_name: businessName || null
+            business_name: businessName || null,
+            business_profile_draft: businessDraft
           }
         })
       }
@@ -2116,14 +2190,17 @@ async function registerProfessionalAccount(event) {
     const result = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      throw new Error(result.msg || result.message || result.error_description || "Registration failed.");
+      throw new Error(
+        result.msg ||
+        result.message ||
+        result.error_description ||
+        "Registration failed."
+      );
     }
 
-    document.getElementById("professionalRegisterForm").reset();
-
-    message.textContent = result.session
-      ? "Registration successful. Please sign in to access your professional dashboard."
-      : "Registration submitted. Check your email for confirmation, then sign in.";
+    message.textContent =
+      "Registration submitted. " +
+      "Check your email for confirmation, then sign in to complete your business profile.";
 
   } catch (error) {
     message.textContent = error.message;
